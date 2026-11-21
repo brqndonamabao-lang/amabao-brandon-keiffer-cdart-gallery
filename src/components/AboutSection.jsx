@@ -16,14 +16,11 @@ function AboutSection({ cards, categories }) {
       <div className="about-grid">
         <div>
           <p>
-            {'CDArt Gallery turns a portfolio into something small enough to hold: '}
+            {'CDArt Gallery gives every artist '}
             <b>one card</b>
-            {', a miniature gallery of pictures and videos, with a name behind it. Visitors browse, react, and carry your links back to the places where you actually post. CD stands for '}
+            {': a small gallery of their pictures or videos with their name and social links. Visitors browse the cards, leave a heart, and follow the artist where they actually post. CD stands for '}
             <b>Card Deck</b>
-            {' \u2014 a little stack of work that travels further than a single post.'}
-          </p>
-          <p>
-            Please be kind in your reactions &mdash; <u>every artwork is someone&rsquo;s hard work</u>.
+            {' which means a small stack of work in one place.'}
           </p>
 
           <hr />

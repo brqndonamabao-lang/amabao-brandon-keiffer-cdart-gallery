@@ -11,11 +11,9 @@ function HeroSection({ galleryName, cardCount, workCount, totalLikes, onSurprise
         Come look around.
       </h1>
       <p className="hero-text">
-        One artist, one card, a whole world folded into a square. Open a deck
-        and you might find a single bold piece or a small series that belongs
-        together. Wander until something stops you, leave a heart, then follow
-        the maker somewhere new. Artists: add your own card to the wall and let
-        new eyes find you. No account, no noise.
+        Every artist gets one card holding 1 to 5 works. Open a card, browse the
+        deck, leave a heart, and follow the artist&rsquo;s links. New cards go on
+        top so everyone gets seen. No account, no noise.
       </p>
 
       <div className="hero-actions">
