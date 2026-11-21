@@ -62,6 +62,8 @@ Visitors scroll cards, open one, swipe through works, leave a heart, and follow 
 2. Terminal: `npm install`
 3. Terminal: `npm run dev` and open the shown link (usually `http://localhost:5173`)
 
+**Live website (GitHub Pages):** https://brqndonamabao-lang.github.io/amabao-brandon-keiffer-cdart-gallery/
+
 ---
 
 ### Known Limitations
@@ -78,14 +80,3 @@ Visitors scroll cards, open one, swipe through works, leave a heart, and follow 
 ### Grading Rubric Summary
 
 The project is graded out of 100 points across website criteria (HTML, CSS, JavaScript, React, functionality, video, presentation, organization) and video documentation. See the full guidelines PDF for detailed point breakdown.
-
----
-
-### Submission Checklist
-
-- [ ] Complete source folder with required code and assets
-- [ ] README with project details and run/instruction guidelines
-- [ ] Video documentation (10-minute recording)
-- [ ] Files follow required naming format (`Lastname_Firstname_WebsiteProject`)
-- [ ] ZIP file, LINKS.txt, and screenshots ready for submission
-- [ ] Check final submitted files and video before uploading
