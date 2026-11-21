@@ -688,7 +688,6 @@ input[type='file'] {
 
 /* Grid items default to min-width:auto, which lets a wide file input
    stretch the form past the screen on phones. min-width:0 fixes that. */
-.upload-layout > *,
 .about-grid > * {
   min-width: 0;
 }
@@ -710,12 +709,6 @@ textarea[aria-invalid='true'] {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--danger);
-}
-
-.success {
-  margin: 0;
-  font-weight: 700;
-  color: #2f8f4e;
 }
 
 /* ---------- ABOUT ---------- */
@@ -1096,25 +1089,6 @@ hr {
   align-items: center;
   gap: 0.8rem;
   margin-bottom: 1.1rem;
-}
-
-.viewer-avatar {
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  width: 3rem;
-  height: 3rem;
-  overflow: hidden;
-  border-radius: 50%;
-  background: var(--border);
-  color: var(--muted);
-  font-size: 1.1rem;
-}
-
-.viewer-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .viewer-artist h3 {
