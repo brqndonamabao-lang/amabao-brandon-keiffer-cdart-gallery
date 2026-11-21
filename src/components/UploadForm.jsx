@@ -129,10 +129,9 @@ function UploadForm({ categories, onAddCard }) {
       <p className="eyebrow">Get more fans</p>
       <h2 id="upload-title">Post your card</h2>
       <p className="section-intro">
-        Your work deserves more than a folder. Give it a card: choose the pieces
-        that feel most like you, name the collection, and leave your links for
-        anyone who wants to see what comes next. One card each keeps the wall
-        fair, and a caption is a lovely touch &mdash; never a requirement.
+        Your work deserves more than a folder. Choose the pieces that feel most
+        like you, name the collection, and leave your links so people can follow
+        your work.
       </p>
 
       <form className="upload-form" onSubmit={handleSubmit} noValidate>

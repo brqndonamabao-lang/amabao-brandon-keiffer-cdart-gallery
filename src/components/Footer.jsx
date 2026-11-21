@@ -1,12 +1,13 @@
 // Footer: credits and two working external links.
 // Props: galleryName
+const YEAR = new Date().getFullYear();
+
 function Footer({ galleryName }) {
-  const year = new Date().getFullYear();
 
   return (
     <footer className="site-footer">
       <p>
-        &copy; {year} {galleryName}. Every artwork belongs to its artist. Please
+        &copy; {YEAR} {galleryName}. Every artwork belongs to its artist. Please
         don&rsquo;t copy or repost without permission.
         <br />
         Background: a painted reproduction of <i>The Starry Night</i> by Vincent van Gogh (1889, public domain).

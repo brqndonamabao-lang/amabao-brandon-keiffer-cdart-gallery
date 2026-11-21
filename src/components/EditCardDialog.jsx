@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cleanLinks } from '../utils/links';
 import { MAX_LINKS, validateCardFields } from '../utils/validation';
 import SocialLinksField from './SocialLinksField';
@@ -18,22 +18,19 @@ function EditCardDialog({ card, categories, onSave, onDelete, onCancel }) {
   const [errors, setErrors] = useState({});
   const [confirmingDelete, setConfirmingDelete] = useState(false); // shows the "are you sure?" pop-up
 
-  // Escape = cancel (same pattern as the other pop-ups)
-  // While the delete confirmation is open, Escape closes only that pop-up
-  const cancelRef = useRef(onCancel);
-  cancelRef.current = onCancel;
-  const confirmingRef = useRef(false);
-  confirmingRef.current = confirmingDelete;
+  // Escape = cancel (same pattern as the other pop-ups).
+  // While the delete confirmation is open, that pop-up handles Escape instead.
   useEffect(() => {
+    if (confirmingDelete) return undefined;
     const handleKey = (event) => {
-      if (event.key === 'Escape' && !confirmingRef.current) {
+      if (event.key === 'Escape') {
         event.stopPropagation();
-        cancelRef.current();
+        onCancel();
       }
     };
     window.addEventListener('keydown', handleKey, true);
     return () => window.removeEventListener('keydown', handleKey, true);
-  }, []);
+  }, [onCancel, confirmingDelete]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;

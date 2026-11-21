@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import MediaView from './MediaView';
 import SocialLink from './SocialLink';
 
@@ -6,7 +6,7 @@ import SocialLink from './SocialLink';
 // LEFT: the artwork, as large as the screen allows, with only a close button
 //       and a native horizontal scroll bar. Use the mouse wheel, swipe on a
 //       touch screen, or press ← → to move. Click an image to zoom.
-// RIGHT: title, artist, caption, social links, hearts and share/copy actions.
+// RIGHT: title, artist, caption, social links, hearts and copy-link action.
 // Props: card, onLike, onReport, onEdit, onClose
 function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
   const { id, title, author, category, caption, socials, works, likes, liked, isMine } = card;
@@ -14,33 +14,24 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
   const wheelLock = useRef(0);
   const copiedTimer = useRef(null);
   const [index, setIndex] = useState(0);
-  const [zoomed, setZoomed] = useState(false);
+  const [zoomIndex, setZoomIndex] = useState(null); // which work is zoomed, or null
   const [copied, setCopied] = useState(false);
   const lastIndex = works.length - 1;
   const current = works[index];
+  // Derived state: zoom is true only while the zoomed work is the visible one.
+  // Changing work automatically leaves zoom mode - no effect needed.
+  const zoomed = zoomIndex === index;
 
   // Move to a given work, staying inside 0 .. lastIndex.
   // The stage is a real scroll area, so we scroll it instead of moving a row.
-  const goTo = (number) => {
+  const goTo = useCallback((number) => {
     const stage = stageRef.current;
     const next = Math.max(0, Math.min(lastIndex, number));
     setIndex(next);
     if (stage) {
       stage.scrollTo({ left: next * stage.clientWidth, behavior: 'smooth' });
     }
-  };
-
-  // A different card was opened: start from its first work
-  useEffect(() => {
-    setIndex(0);
-    setZoomed(false);
-    if (stageRef.current) stageRef.current.scrollLeft = 0;
-  }, [card.id]);
-
-  // New work shown: leave zoom mode
-  useEffect(() => {
-    setZoomed(false);
-  }, [index]);
+  }, [lastIndex]);
 
   // Keep the page behind the viewer from scrolling while it is open
   useEffect(() => {
@@ -72,7 +63,7 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
 
     stage.addEventListener('wheel', handleWheel, { passive: false });
     return () => stage.removeEventListener('wheel', handleWheel);
-  }, [index, lastIndex, works.length]);
+  }, [index, lastIndex, works.length, goTo]);
 
   // Keep the active work in step with the native scroll position (this is
   // what makes swiping on a phone and dragging the scroll bar work).
@@ -95,7 +86,7 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
   useEffect(() => {
     const handleKey = (event) => {
       if (event.key === 'Escape') {
-        if (zoomed) setZoomed(false);
+        if (zoomed) setZoomIndex(null);
         else onClose();
         return;
       }
@@ -106,7 +97,7 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [onClose, index, zoomed]);
+  }, [onClose, index, zoomed, goTo]);
 
   // ---- Share / copy a link to this card ----
   const cardLink = `${window.location.origin}${window.location.pathname}#card-${id}`;
@@ -130,22 +121,6 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
     copiedTimer.current = setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `${title} by ${author}`,
-          text: 'Look at this card on CDArt Gallery',
-          url: cardLink,
-        });
-      } catch {
-        // The visitor closed the share sheet: nothing to do
-      }
-      return;
-    }
-    copyLink();
-  };
-
   return (
     <div className="viewer" role="dialog" aria-modal="true" aria-label={`${title} by ${author}`}>
       <div className="viewer-media">
@@ -163,7 +138,7 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
                   className={work.type === 'image' ? 'art art-image' : 'art'}
                   onClick={
                     work.type === 'image' && number === index
-                      ? () => setZoomed(true)
+                      ? () => setZoomIndex(number)
                       : undefined
                   }
                 >
@@ -191,13 +166,8 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
 
       <aside className="viewer-side" aria-label="Card details">
         <header className="viewer-artist">
-          <span className="viewer-avatar" aria-hidden="true">
-            {works[0].type === 'video' ? '▶' : <img src={works[0].url} alt="" />}
-          </span>
-          <div>
-            <h3>{title}</h3>
-            <p className="tile-author">by {author}</p>
-          </div>
+          <h3>{title}</h3>
+          <p className="tile-author">by {author}</p>
         </header>
 
         <div className="viewer-meta">
@@ -224,9 +194,6 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
           </button>
 
           <div className="viewer-share">
-            <button type="button" className="btn-small" onClick={handleShare}>
-              Share
-            </button>
             <button type="button" className="btn-small" onClick={copyLink}>
               {copied ? '✓ Copied' : 'Copy link'}
             </button>
@@ -246,7 +213,7 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
       </aside>
 
       {zoomed && current.type === 'image' && (
-        <div className="zoom-layer" onClick={() => setZoomed(false)}>
+        <div className="zoom-layer" onClick={() => setZoomIndex(null)}>
           <img src={current.url} alt={`${title} by ${author}, full screen`} />
         </div>
       )}

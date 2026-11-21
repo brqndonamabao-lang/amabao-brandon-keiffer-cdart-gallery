@@ -7,8 +7,8 @@ function PostedNotice({ card, onView, onEdit }) {
       <p className="eyebrow">You&rsquo;re in the gallery</p>
       <h2 id="posted-title">Your card is live</h2>
       <p className="section-intro">
-        &ldquo;{card.title}&rdquo; is pinned at the top of the gallery. Each artist
-        gets one card, so the post form is hidden. You can still edit your card.
+        &ldquo;{card.title}&rdquo; is pinned at the top of the gallery. You can
+        still edit it any time.
       </p>
       <div className="hero-actions">
         <button type="button" className="btn btn-primary" onClick={() => onView(card.id)}>

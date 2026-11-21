@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Reasons a visitor can choose when reporting a post
-export const REPORT_REASONS = [
+const REPORT_REASONS = [
   'Copyright / stolen artwork',
   'Violent content',
   'Nudity or sexual content',
@@ -15,22 +15,19 @@ function ReportDialog({ title, onSubmit, onCancel }) {
   const [error, setError] = useState('');
 
   // Escape key = the same as choosing "cancel".
-  // The latest onCancel is kept in a ref so the listener is added only once.
+  // The listener is re-added when onCancel changes, so it always calls the latest one.
   // It listens in the "capture" phase and stops the event, so when this pop-up
   // sits on top of the big picture view, Escape closes ONLY this pop-up.
-  const cancelRef = useRef(onCancel);
-  cancelRef.current = onCancel;
-
   useEffect(() => {
     const handleKey = (event) => {
       if (event.key === 'Escape') {
         event.stopPropagation();
-        cancelRef.current();
+        onCancel();
       }
     };
     window.addEventListener('keydown', handleKey, true);
     return () => window.removeEventListener('keydown', handleKey, true);
-  }, []);
+  }, [onCancel]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
