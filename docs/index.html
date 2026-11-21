@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="CDArt Gallery - a quiet, story-driven gallery where artists turn a small collection of work into one card, and visitors follow the art they love."
+    />
+    <meta name="author" content="Brandon Keiffer Amabao" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0b1224" />
+    <link rel="icon" type="image/svg+xml" href="/amabao-brandon-keiffer-cdart-gallery/favicon.svg" />
+    <title>CDArt Gallery | Card Gallery for Artists</title>
+
+    <!--
+      CSS METHOD 2 of 3 - INTERNAL CSS (a <style> block in the document head).
+      Used for the tiny scroll-progress bar that lives OUTSIDE the React app,
+      so it is styled right here next to its script.
+
+      CASCADE DEMO: the external stylesheet (src/App.css) also styles
+      .scroll-progress (height 4px, grey background). Because this internal
+      block uses an ID selector (#scroll-progress), it is MORE SPECIFIC than
+      the external class selector, so the accent gradient defined here wins.
+      The inline style on the element (width) wins over everything else for
+      the properties it sets.
+    -->
+    <style>#scroll-progress{z-index:100;background:linear-gradient(90deg,#3b5fa8,#ffd166)}</style>
+    <script type="module" crossorigin src="/amabao-brandon-keiffer-cdart-gallery/assets/index-DmXRF2iL.js"></script>
+    <link rel="stylesheet" crossorigin href="/amabao-brandon-keiffer-cdart-gallery/assets/index-D9x9KeFc.css">
+  </head>
+  <body>
+    <!--
+      CSS METHOD 1 of 3 - INLINE CSS (style attribute).
+      Only the starting width is inline, because JavaScript changes it as you scroll.
+      The bar is decorative, so it is hidden from screen readers.
+    -->
+    <div id="scroll-progress" class="scroll-progress" style="width: 0%" aria-hidden="true"></div>
+
+    <!-- React renders the whole website inside this one element -->
+    <div id="root"></div>
+
+    <noscript>
+      <p
+        style="
+          max-width: 640px;
+          margin: 2rem auto;
+          padding: 1rem;
+          font-family: system-ui, sans-serif;
+          color: #17203a;
+          background: #fffdf9;
+          border: 1px solid #e2d9cc;
+          border-radius: 14px;
+          text-align: center;
+        "
+      >
+        CDArt Gallery needs JavaScript to show the cards. Please enable JavaScript and reload.
+      </p>
+    </noscript>
+
+
+    <!-- Plain JavaScript (no React): direct DOM manipulation demo. See public/dom-demo.js -->
+    <script src="/amabao-brandon-keiffer-cdart-gallery/dom-demo.js"></script>
+  </body>
+</html>
