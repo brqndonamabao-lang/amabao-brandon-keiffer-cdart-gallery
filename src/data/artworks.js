@@ -1,23 +1,34 @@
-// Locally defined sample data (no database needed).
+// ============================================================
+// VIDEO PART 3 - DEVELOPMENT SETUP AND STRUCTURE
+// TOPIC 4 OF 4: src/data/artworks.js (the starting data)
+// ------------------------------------------------------------
+// This file is not a component and it does not draw anything. It
+// is just data. It tells the gallery what to show before the
+// visitor adds their own card.
 //
-// WORDS USED IN THIS SITE
+// The words used in this site:
 //   card  = one artist's square tile in the gallery
-//   deck  = the 1 to 5 works (pictures or videos) inside that card
+//   deck  = the 1 to 5 works (pictures or videos) inside a card
+//   socials = the list of social media links under the card
 //
-// socials: a list of social media links shown under the card, for example
-//   socials: ['https://instagram.com/yourname', 'https://x.com/yourname']
+// The pictures live in public/art. When you build the site for
+// GitHub Pages, Vite makes a copy in docs/art automatically. You
+// only edit public/art. The `art()` helper below adds the correct
+// base path, so the images work both locally and on GitHub Pages.
+//
+// If you want only one picture, delete two of the three `works`
+// lines at the bottom. The viewer still works, but the swipe-
+// through-works demo will have only one slide.
+// ============================================================
 
-export const GALLERY_NAME = 'CDArt Gallery'; // CD = Card Deck
+export const GALLERY_NAME = 'CDArt Gallery';
 export const ARTIST_NAME = 'Keiffer';
 
-// Keep categories general and simple (the artist's main style).
 export const CATEGORIES = ['Digital', 'Traditional', 'Photography', 'Animation', 'Video'];
 
-export const MAX_WORKS = 5; // a card can hold 1 to 5 works
+export const MAX_WORKS = 5;
 
-// BASE_URL is Vite's base path. It is "/" when running locally with npm run dev,
-// and "/amabao-brandon-keiffer-cdart-gallery/" on GitHub Pages. Prefixing the
-// image paths with it keeps the artworks loading in BOTH places.
+// PART 3 - This helper adds the correct base path to each image.
 const art = (file) => `${import.meta.env.BASE_URL}art/${file}`;
 
 export const startingCards = [

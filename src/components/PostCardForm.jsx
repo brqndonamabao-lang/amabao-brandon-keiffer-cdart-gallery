@@ -2,16 +2,13 @@ import { useRef, useState } from 'react';
 import { MAX_WORKS } from '../data/artworks';
 import { cleanLinks } from '../utils/links';
 import { MAX_LINKS, validateCardFields } from '../utils/validation';
-import ConfirmDialog from './ConfirmDialog';
-import SocialLinksField from './SocialLinksField';
+import ConfirmPopup from './ConfirmPopup';
 
 const MAX_IMAGE_MB = 5;
 const MAX_VIDEO_MB = 30;
 
-// Starting (empty) form values
 const emptyForm = { title: '', author: '', category: '', caption: '' };
 
-// Checks ONE chosen file. Returns an error message, or '' when the file is fine.
 function checkFile(file) {
   const isImage = file.type.startsWith('image/');
   const isVideo = file.type.startsWith('video/');
@@ -25,17 +22,34 @@ function checkFile(file) {
   return '';
 }
 
-// UploadForm: lets an artist post their ONE card with 1 to 5 works.
+// ============================================================
+// VIDEO PART 5 - JAVASCRIPT: loops, conditions, validation.
+// VIDEO PART 6 - REACT: useState keeps the form values.
+// VIDEO PART 7 - TESTING: try an empty title, a bad link, a big file.
+// ============================================================
+//
+// PostCardForm = lets an artist post their ONE card with 1 to 5 works.
 // Social links are required, the caption is optional.
-// Props: categories, onAddCard
-function UploadForm({ categories, onAddCard }) {
+//
+// PROPS: categories, onAddCard
+//
+// PART 6 - STATE: `values` holds the text fields, `links` holds
+// the social links, `works` holds the chosen files, and `errors`
+// holds the messages shown under the fields.
+//
+// PART 5 - VALIDATION: `validateCardFields` checks the text and
+// links. `checkFile` checks each picture or video. The helper
+// `SocialLinksFields` is shared with EditCardPopup.
+
+function PostCardForm({ categories, onAddCard }) {
+  // PART 6 - STATE: every value the form needs to remember.
   const [values, setValues] = useState(emptyForm);
-  const [links, setLinks] = useState(['']); // list of social link inputs
-  const [works, setWorks] = useState([]); // chosen files: { id, url, type }
+  const [links, setLinks] = useState(['']);
+  const [works, setWorks] = useState([]);
   const [errors, setErrors] = useState({});
-  const [fileNotice, setFileNotice] = useState(''); // problems found while picking files
-  const [askNoCaption, setAskNoCaption] = useState(false); // shows the "no caption?" pop-up
-  const [fileInputKey, setFileInputKey] = useState(0); // changing the key clears the file input
+  const [fileNotice, setFileNotice] = useState('');
+  const [askNoCaption, setAskNoCaption] = useState(false);
+  const [fileInputKey, setFileInputKey] = useState(0);
   const nextWorkId = useRef(1);
   const captionRef = useRef(null);
 
@@ -46,7 +60,6 @@ function UploadForm({ categories, onAddCard }) {
     setValues({ ...values, [name]: value });
   };
 
-  // ---- social link list handlers ----
   const handleLinkChange = (index, value) => {
     setLinks(links.map((text, i) => (i === index ? value : text)));
   };
@@ -58,12 +71,12 @@ function UploadForm({ categories, onAddCard }) {
   };
 
   // ---- works (pictures / videos) ----
+  // PART 5 - LOOP: go over every chosen file and keep the good ones.
   const handleFiles = (event) => {
     const picked = [...event.target.files];
     const accepted = [];
     const problems = [];
 
-    // Loop over every chosen file and keep the good ones (up to the limit)
     picked.forEach((file) => {
       const problem = checkFile(file);
       if (problem) {
@@ -73,7 +86,7 @@ function UploadForm({ categories, onAddCard }) {
       } else {
         accepted.push({
           id: nextWorkId.current++,
-          url: URL.createObjectURL(file), // temporary address, nothing is uploaded
+          url: URL.createObjectURL(file),
           type: file.type.startsWith('video/') ? 'video' : 'image',
         });
       }
@@ -82,9 +95,9 @@ function UploadForm({ categories, onAddCard }) {
     setWorks([...works, ...accepted]);
     setFileNotice(problems.join(' '));
     if (accepted.length > 0) {
-      setErrors({ ...errors, works: undefined }); // the "add a work" message is no longer true
+      setErrors({ ...errors, works: undefined });
     }
-    setFileInputKey(fileInputKey + 1); // clear the input so the same file can be chosen again
+    setFileInputKey(fileInputKey + 1);
   };
 
   const removeWork = (id) => {
@@ -92,7 +105,6 @@ function UploadForm({ categories, onAddCard }) {
     setFileNotice('');
   };
 
-  // Actually adds the card (called once everything is valid and confirmed)
   const publish = () => {
     onAddCard({
       title: values.title.trim(),
@@ -104,6 +116,7 @@ function UploadForm({ categories, onAddCard }) {
     });
   };
 
+  // PART 5 - CONDITION: stop if there is an error.
   const handleSubmit = (event) => {
     event.preventDefault();
     const foundErrors = validateCardFields(values, links);
@@ -112,10 +125,8 @@ function UploadForm({ categories, onAddCard }) {
     }
     setErrors(foundErrors);
 
-    // Stop here if there is at least one error
     if (Object.keys(foundErrors).length > 0) return;
 
-    // No caption? That is allowed, but ask once to make sure it is on purpose.
     if (values.caption.trim() === '') {
       setAskNoCaption(true);
       return;
@@ -195,7 +206,7 @@ function UploadForm({ categories, onAddCard }) {
           </div>
         </div>
 
-        <SocialLinksField
+        <SocialLinksFields
           links={links}
           errors={linkErrors}
           idPrefix="social"
@@ -260,7 +271,7 @@ function UploadForm({ categories, onAddCard }) {
       </form>
 
       {askNoCaption && (
-        <ConfirmDialog
+        <ConfirmPopup
           title="Post without a caption?"
           message="Are you sure you don't want a caption? A few words can help people connect with your art, but it's totally fine to skip."
           confirmLabel="Yes, post it"
@@ -279,4 +290,56 @@ function UploadForm({ categories, onAddCard }) {
   );
 }
 
-export default UploadForm;
+/* PART 6 - SOCIAL LINKS FIELD HELPER
+   ------------------------------------------------------------
+   This is the "add up to 5 social media links" part of the form.
+   EditCardPopup imports it too, so the markup lives in one place
+   instead of being copied into two forms. */
+export function SocialLinksFields({ links, errors, idPrefix, onChange, onAdd, onRemove }) {
+  return (
+    <fieldset className="field links-field">
+      <legend>Social media links (required)</legend>
+      <p className="hint">
+        Link the accounts where you post this same artwork, so fans can check
+        it&rsquo;s yours and follow you. Add up to {MAX_LINKS}.
+      </p>
+
+      {links.map((text, index) => (
+        <div key={index} className="link-row">
+          <div className="link-input">
+            <label htmlFor={`${idPrefix}-${index}`} className="visually-hidden">
+              Social media link {index + 1}
+            </label>
+            <input
+              id={`${idPrefix}-${index}`}
+              type="text"
+              placeholder="https://instagram.com/yourname"
+              value={text}
+              onChange={(event) => onChange(index, event.target.value)}
+              aria-invalid={Boolean(errors[index])}
+            />
+            {errors[index] && <p className="error">{errors[index]}</p>}
+          </div>
+          {index > 0 && (
+            <button
+              type="button"
+              className="btn-small"
+              onClick={() => onRemove(index)}
+              aria-label={`Remove social media link ${index + 1}`}
+            >
+              Remove
+            </button>
+          )}
+        </div>
+      ))}
+
+      {links.length < MAX_LINKS && (
+        <button type="button" className="btn-small btn-add" onClick={onAdd}>
+          + Add another account
+        </button>
+      )}
+    </fieldset>
+  );
+}
+
+export default PostCardForm;

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-// Reasons a visitor can choose when reporting a post
 const REPORT_REASONS = [
   'Copyright / stolen artwork',
   'Violent content',
@@ -8,16 +7,24 @@ const REPORT_REASONS = [
   'Something else',
 ];
 
-// ReportDialog: asks WHY a post is being reported, then hands the reason back.
-// Props: title (name of the artwork), onSubmit(reason), onCancel
-function ReportDialog({ title, onSubmit, onCancel }) {
+// ============================================================
+// VIDEO PART 5 - JAVASCRIPT: radio buttons, conditions, validation.
+// VIDEO PART 6 - REACT: useState remembers the chosen reason.
+// VIDEO PART 8 - WALKTHROUGH: click Report on a card.
+// ============================================================
+//
+// ReportPopup = asks WHY a post is being reported, then hands the reason back.
+//
+// PROPS: title (name of the artwork), onSubmit(reason), onCancel
+//
+// PART 5 - The REPORT_REASONS list below holds the choices shown
+// as radio buttons. Radio buttons let the visitor pick only one.
+
+function ReportPopup({ title, onSubmit, onCancel }) {
   const [reason, setReason] = useState('');
   const [error, setError] = useState('');
 
-  // Escape key = the same as choosing "cancel".
-  // The listener is re-added when onCancel changes, so it always calls the latest one.
-  // It listens in the "capture" phase and stops the event, so when this pop-up
-  // sits on top of the big picture view, Escape closes ONLY this pop-up.
+  // PART 5 - Keyboard: Escape means cancel.
   useEffect(() => {
     const handleKey = (event) => {
       if (event.key === 'Escape') {
@@ -84,4 +91,4 @@ function ReportDialog({ title, onSubmit, onCancel }) {
   );
 }
 
-export default ReportDialog;
+export default ReportPopup;

@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react';
 import { cleanLinks } from '../utils/links';
 import { MAX_LINKS, validateCardFields } from '../utils/validation';
-import SocialLinksField from './SocialLinksField';
-import ConfirmDialog from './ConfirmDialog';
+import { SocialLinksFields } from './PostCardForm';
+import ConfirmPopup from './ConfirmPopup';
 
-// EditCardDialog: pop-up to change the text and links of your own card.
-// (Works are not changed here.) Changes last only until the page is refreshed.
-// Props: card, categories, onSave(changes), onDelete, onCancel
-function EditCardDialog({ card, categories, onSave, onDelete, onCancel }) {
+// ============================================================
+// VIDEO PART 6 - REACT: useState starts from the card's current text.
+// VIDEO PART 5 - JAVASCRIPT: validation runs before saving.
+// ============================================================
+//
+// EditCardPopup = pop-up to change the text and links of your own card.
+// (Works are not changed here.) Changes last only until the page refreshes.
+//
+// PROPS: card, categories, onSave(changes), onDelete, onCancel
+
+function EditCardPopup({ card, categories, onSave, onDelete, onCancel }) {
   const [values, setValues] = useState({
     title: card.title,
     author: card.author,
@@ -16,9 +23,9 @@ function EditCardDialog({ card, categories, onSave, onDelete, onCancel }) {
   });
   const [links, setLinks] = useState(card.socials.length > 0 ? card.socials : ['']);
   const [errors, setErrors] = useState({});
-  const [confirmingDelete, setConfirmingDelete] = useState(false); // shows the "are you sure?" pop-up
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
-  // Escape = cancel (same pattern as the other pop-ups).
+  // PART 5 - Keyboard: Escape means cancel.
   // While the delete confirmation is open, that pop-up handles Escape instead.
   useEffect(() => {
     if (confirmingDelete) return undefined;
@@ -113,7 +120,7 @@ function EditCardDialog({ card, categories, onSave, onDelete, onCancel }) {
           {errors.caption && <p className="error">{errors.caption}</p>}
         </div>
 
-        <SocialLinksField
+        <SocialLinksFields
           links={links}
           errors={errors.links || {}}
           idPrefix="edit-social"
@@ -136,7 +143,7 @@ function EditCardDialog({ card, categories, onSave, onDelete, onCancel }) {
       </form>
 
       {confirmingDelete && (
-        <ConfirmDialog
+        <ConfirmPopup
           title="Delete this card?"
           message="Your card and its works will be removed from the gallery. This cannot be undone."
           confirmLabel="Yes, delete"
@@ -149,4 +156,4 @@ function EditCardDialog({ card, categories, onSave, onDelete, onCancel }) {
   );
 }
 
-export default EditCardDialog;
+export default EditCardPopup;

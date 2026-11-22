@@ -1,7 +1,23 @@
-// AboutSection: explains the gallery, shows a data table and nested lists.
-// Props: cards, categories
-function AboutSection({ cards, categories }) {
-  // Loop over the categories and total up each one with filter + reduce
+// ============================================================
+// VIDEO PART 3 - STRUCTURE: headings, paragraphs, lists, a table.
+// VIDEO PART 5 - JAVASCRIPT: .map(), .filter() and .reduce().
+// VIDEO PART 8 - WALKTHROUGH: scroll to the About section.
+// ============================================================
+//
+// AboutGallery = explains the gallery and shows live numbers.
+// It uses a table, a numbered list, a nested list, and a <pre> poem.
+//
+// PROPS: cards, categories
+//
+// PART 3 - HTML ELEMENTS USED HERE:
+// <h2> and <h3> are headings. <ol> is a numbered list (the steps).
+// <ul> is a bullet list (the rules), and a <ul> can sit inside a
+// <ul> for extra detail. <table> is for real rows and columns of
+// data. <pre> keeps line breaks and spacing exactly as typed, which
+// is why the poem looks like a poem.
+
+function AboutGallery({ cards, categories }) {
+  // PART 5 - LOOP: for every category, count the cards and add up hearts.
   const rows = categories.map((name) => {
     const inCategory = cards.filter((card) => card.category === name);
     const hearts = inCategory.reduce((sum, card) => sum + card.likes, 0);
@@ -26,6 +42,7 @@ function AboutSection({ cards, categories }) {
           <hr />
 
           <h3>How to use the gallery</h3>
+
           <ol className="steps">
             <li>Wander the wall</li>
             <li>Leave a heart</li>
@@ -33,6 +50,7 @@ function AboutSection({ cards, categories }) {
           </ol>
 
           <h3>Community rules</h3>
+
           <ul>
             <li>Post only your own work</li>
             <li>
@@ -45,13 +63,14 @@ function AboutSection({ cards, categories }) {
             <li>Use Report for copied, violent or nude cards</li>
           </ul>
 
-          {/* <pre> keeps line breaks and spacing exactly as typed */}
+
           <pre className="poem">{`Brush, pixel, pencil, paper,
 every drawing is a letter
 sent to someone.`}</pre>
         </div>
 
         <div>
+
           <table className="stats-table">
             <caption>Gallery at a glance (updates live)</caption>
             <thead>
@@ -80,4 +99,4 @@ sent to someone.`}</pre>
   );
 }
 
-export default AboutSection;
+export default AboutGallery;

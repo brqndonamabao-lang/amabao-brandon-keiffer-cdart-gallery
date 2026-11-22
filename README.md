@@ -3,7 +3,7 @@
 ## CDArt Gallery | Card Gallery for Artists
 
 **Student:** Brandon Keiffer Amabao  
-**Course:** BSIT 3
+**Course:** BSIT 3  
 **Subject:** ITEC 138  
 ---
 

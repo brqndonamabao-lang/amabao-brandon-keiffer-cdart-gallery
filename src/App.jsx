@@ -1,24 +1,61 @@
 import { useEffect, useRef, useState } from 'react';
-import Navbar from './components/Navbar';
-import HeroSection from './components/HeroSection';
-import FilterBar from './components/FilterBar';
-import CardTile from './components/CardTile';
-import CardViewer from './components/CardViewer';
-import UploadForm from './components/UploadForm';
-import PostedNotice from './components/PostedNotice';
-import EditCardDialog from './components/EditCardDialog';
-import ReportDialog from './components/ReportDialog';
-import AboutSection from './components/AboutSection';
-import Footer from './components/Footer';
+import TopBar from './components/TopBar';
+import IntroSection from './components/IntroSection';
+import SearchAndFilter from './components/SearchAndFilter';
+import ArtworkCard from './components/ArtworkCard';
+import ArtworkViewer from './components/ArtworkViewer';
+import PostCardForm from './components/PostCardForm';
+import EditCardPopup from './components/EditCardPopup';
+import ReportPopup from './components/ReportPopup';
+import AboutGallery from './components/AboutGallery';
 import { GALLERY_NAME, CATEGORIES, startingCards } from './data/artworks';
 
-// The site opens in dark mode so the Night background looks its best.
-// Visitors can still switch to light with the theme button.
-function getStartingTheme() {
-  return 'dark';
-}
+const CURRENT_YEAR = new Date().getFullYear();
 
-// Give every starting card the fields the app needs.
+/* ============================================================
+   VIDEO PART 3 - DEVELOPMENT SETUP AND STRUCTURE
+   TOPIC 3 OF 4: src/App.jsx (the brain of the page)
+   ------------------------------------------------------------
+   This is the main React file. It does three jobs:
+   1. It imports the small pieces (TopBar, IntroSection, etc.).
+   2. It keeps the shared data (cards, theme, search).
+   3. It puts the pieces in order on the screen.
+
+   The imports at the top are like bringing tools into a room.
+   `useState`, `useEffect`, and `useRef` come from React. The other
+   imports are our own components and data.
+
+   At the bottom of this file you will see `return (`. What is
+   that? A React component is just a JavaScript function. A normal
+   JavaScript function can return a result, like a calculator
+   returns a number. In React, that result is JSX: code that looks
+   like HTML but is actually JavaScript. React takes the returned
+   JSX and turns it into real page elements.
+
+   So `return (` means: "here is what this component should show."
+   It comes from React's rule that a component must return
+   something to display. If a component returns nothing, nothing
+   appears on the screen. The `return` is not an HTML tag and it
+   is not a React-only keyword; it is normal JavaScript.
+
+   The order inside the return is the order on the page:
+   TopBar -> IntroSection -> Gallery -> Post form -> About ->
+   Footer. The pop-ups at the bottom appear only when their state
+   says they should.
+
+   The next topic is src/data/artworks.js, which holds the starting
+   card data that App.jsx uses.
+   ============================================================ */
+
+/* ============================================================
+   PART 6 - REACT DATA SHAPE
+   ------------------------------------------------------------
+   `prepareCard` takes one card and adds the fields the app needs.
+   The `...card` part copies everything that is already there.
+   Then we add the missing fields with safe starting values.
+   `isMine` is false for the featured artist. It becomes true only
+   for the card posted by the visitor using this page.
+   ============================================================ */
 function prepareCard(card) {
   return {
     ...card,
@@ -26,46 +63,77 @@ function prepareCard(card) {
     socials: card.socials || [],
     reports: [],
     reportedByMe: false,
-    isMine: false, // true only for the card posted by the visitor using this page
+    isMine: false,
   };
 }
 
 function App() {
-  // ---- STATE: everything that changes and makes the page re-render ----
+  /* ==========================================================
+     VIDEO PART 6 - REACT IMPLEMENTATION
+     STATE: data that can change
+     ----------------------------------------------------------
+     `useState` gives us two things in one line:
+     - the current value (cards, theme, searchText, ...)
+     - a setter function (setCards, setTheme, ...)
+     When we call the setter, React re-draws the page with the new
+     value. We never change the screen by hand.
+
+     Example:
+       const [theme, setTheme] = useState('dark');
+     `theme` is the value now. `setTheme('light')` changes it, and
+     React updates every place that uses `theme`.
+
+     `useRef` is different. It is a small box that remembers a
+     value between renders, but changing it does NOT re-draw the
+     page. We use it to point at the gallery section so we can
+     scroll to it later.
+     ========================================================== */
   const [cards, setCards] = useState(() => startingCards.map(prepareCard));
-  const [theme, setTheme] = useState(getStartingTheme);
+  const [theme, setTheme] = useState('dark');
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchText, setSearchText] = useState('');
-  // A shared link like .../#card-3 opens that card straight away
-  const [selectedId, setSelectedId] = useState(() => {
+  const [openCardId, setOpenCardId] = useState(() => {
     const match = window.location.hash.match(/^#card-(\d+)$/);
     return match ? Number(match[1]) : null;
-  }); // card open in the viewer
-  const [editingId, setEditingId] = useState(null); // card open in the edit pop-up
-  const [reportingId, setReportingId] = useState(null); // card open in the report pop-up
+  });
+  const [editingCardId, setEditingCardId] = useState(null);
+  const [reportingCardId, setReportingCardId] = useState(null);
   const galleryRef = useRef(null);
 
-  // Keep the address bar in sync, so "Copy link" in the viewer shares the card
+  /* ==========================================================
+     VIDEO PART 5 - JAVASCRIPT INTERACTIONS
+     EFFECTS: code that runs after the screen updates
+     ----------------------------------------------------------
+     `useEffect` is for things outside React: the address bar, the
+     browser theme colour, timers, and event listeners. The array
+     at the end (for example `[openCardId]`) tells React when to
+     run the effect again. An empty array `[]` means "run once,
+     when the component first appears."
+     ========================================================== */
   useEffect(() => {
-    if (selectedId) {
-      history.replaceState(null, '', `#card-${selectedId}`);
+    if (openCardId) {
+      history.replaceState(null, '', `#card-${openCardId}`);
     } else if (/^#card-\d+$/.test(window.location.hash)) {
       history.replaceState(null, '', window.location.pathname + window.location.search);
     }
-  }, [selectedId]);
+  }, [openCardId]);
 
-  // Keep the browser UI (mobile address bar, form controls) in step with the theme
   useEffect(() => {
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1224' : '#f6f1ea');
   }, [theme]);
 
-  // ---- EVENT HANDLERS ----
+  /* ==========================================================
+     VIDEO PART 5 - EVENT HANDLERS
+     ----------------------------------------------------------
+     These functions run when the visitor clicks something.
+     `toggleTheme` flips light and dark. `toggleHeart` uses `.map()`
+     to find one card and change only that card. `addCard` uses the
+     spread operator `...` to put the new card at the front.
+     ========================================================== */
   const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
 
-  // Like / unlike. Likes only live in React state, so a refresh resets them
-  // (no database, as intended for this project).
-  const handleLike = (id) => {
+  const toggleHeart = (id) => {
     setCards(
       cards.map((card) => {
         if (card.id !== id) return card;
@@ -78,10 +146,7 @@ function App() {
     );
   };
 
-  // Called by UploadForm when a valid card is submitted.
-  // The card is marked as the visitor's own, which pins it to the top
-  // and hides the post form (one card per artist).
-  const handleAddCard = (newCard) => {
+  const addCard = (newCard) => {
     const nextId = cards.reduce((max, card) => Math.max(max, card.id), 0) + 1;
     setCards([
       { ...newCard, id: nextId, likes: 0, liked: false, reports: [], reportedByMe: false, isMine: true },
@@ -89,49 +154,52 @@ function App() {
     ]);
     setActiveCategory('All');
     setSearchText('');
-    // After the screen updates, scroll up to the gallery so the new card is seen
     setTimeout(() => galleryRef.current.scrollIntoView({ behavior: 'smooth' }), 100);
   };
 
-  // Save the changes made in the edit pop-up
-  const handleSaveEdit = (changes) => {
-    setCards(cards.map((card) => (card.id === editingId ? { ...card, ...changes } : card)));
-    setEditingId(null);
+  const saveCardEdits = (changes) => {
+    setCards(cards.map((card) => (card.id === editingCardId ? { ...card, ...changes } : card)));
+    setEditingCardId(null);
   };
 
-  // Remove the card being edited (the pop-up already asked "are you sure?")
-  const handleDeleteCard = () => {
-    setCards(cards.filter((card) => card.id !== editingId));
-    setEditingId(null);
+  const deleteCard = () => {
+    setCards(cards.filter((card) => card.id !== editingCardId));
+    setEditingCardId(null);
   };
 
   const openEditor = (id) => {
-    setSelectedId(null); // close the viewer first
-    setEditingId(id);
+    setOpenCardId(null);
+    setEditingCardId(id);
   };
 
-  // A visitor sent a report: store the reason and hide the card for them
-  const handleReport = (reason) => {
+  const reportCard = (reason) => {
     setCards(
       cards.map((card) =>
-        card.id === reportingId
+        card.id === reportingCardId
           ? { ...card, reports: [...card.reports, reason], reportedByMe: true }
           : card
       )
     );
-    if (selectedId === reportingId) setSelectedId(null);
-    setReportingId(null);
+    if (openCardId === reportingCardId) setOpenCardId(null);
+    setReportingCardId(null);
   };
 
-  // "Surprise me": open a random card (skipping ones the visitor reported)
-  const handleSurprise = () => {
+  const openRandomCard = () => {
     const pool = cards.filter((card) => !card.reportedByMe);
     if (pool.length === 0) return;
     const randomIndex = Math.floor(Math.random() * pool.length);
-    setSelectedId(pool[randomIndex].id);
+    setOpenCardId(pool[randomIndex].id);
   };
 
-  // ---- DERIVED DATA: calculated from state on every render ----
+  /* ==========================================================
+     VIDEO PART 5 - DERIVED DATA
+     ----------------------------------------------------------
+     These values are calculated from state on every render.
+     `.filter()` keeps only the cards that match the category and
+     the search text. `.sort()` puts the visitor's own card first.
+     `.reduce()` adds up the hearts and the works. `.find()` picks
+     one card by its id.
+     ========================================================== */
   const query = searchText.trim().toLowerCase();
   const filteredCards = cards.filter((card) => {
     const matchesCategory = activeCategory === 'All' || card.category === activeCategory;
@@ -144,10 +212,7 @@ function App() {
     return matchesCategory && matchesSearch;
   });
 
-  // ORDER: the visitor's own card is pinned first. Everything else is newest
-  // first, so a new artist is never buried under older, popular cards.
-  // Hearts are appreciation, not a ranking.
-  const galleryCards = [...filteredCards].sort((a, b) => {
+  const visibleCards = [...filteredCards].sort((a, b) => {
     if (a.isMine !== b.isMine) return a.isMine ? -1 : 1;
     return b.id - a.id;
   });
@@ -155,23 +220,32 @@ function App() {
   const totalLikes = cards.reduce((sum, card) => sum + card.likes, 0);
   const totalWorks = cards.reduce((sum, card) => sum + card.works.length, 0);
   const myCard = cards.find((card) => card.isMine);
-  const selectedCard = cards.find((card) => card.id === selectedId);
-  const editingCard = cards.find((card) => card.id === editingId);
-  const reportingCard = cards.find((card) => card.id === reportingId);
+  const openCard = cards.find((card) => card.id === openCardId);
+  const editingCard = cards.find((card) => card.id === editingCardId);
+  const reportingCard = cards.find((card) => card.id === reportingCardId);
 
+  /* ==========================================================
+     VIDEO PART 8 - FINAL WEBSITE WALKTHROUGH
+     ----------------------------------------------------------
+     This is the `return` explained in Part 3. Everything inside it
+     is what the visitor sees. Read it from top to bottom:
+     TopBar -> IntroSection -> Gallery -> Post form -> About ->
+     Footer. Then show the pop-ups at the bottom: the viewer, the
+     edit pop-up, and the report pop-up.
+     ========================================================== */
   return (
     <div className="app-shell" data-theme={theme}>
       <a className="skip-link" href="#gallery">Skip to the gallery</a>
 
-      <Navbar galleryName={GALLERY_NAME} theme={theme} onToggleTheme={toggleTheme} />
+      <TopBar galleryName={GALLERY_NAME} theme={theme} onToggleTheme={toggleTheme} />
 
       <main>
-        <HeroSection
+        <IntroSection
           galleryName={GALLERY_NAME}
           cardCount={cards.length}
           workCount={totalWorks}
           totalLikes={totalLikes}
-          onSurprise={handleSurprise}
+          onSurprise={openRandomCard}
         />
 
         <section className="section" id="gallery" ref={galleryRef} aria-labelledby="gallery-title">
@@ -180,26 +254,26 @@ function App() {
           <p className="section-intro">
              Open a card to see an artist’s work. Drag the art or the bar below it to move through the pieces,
              leave a heart on the ones you like, and follow the links to see more.
-          </p>  
+          </p>
 
-          <FilterBar
+          <SearchAndFilter
             categories={CATEGORIES}
             activeCategory={activeCategory}
             onCategoryChange={setActiveCategory}
             searchText={searchText}
             onSearchChange={setSearchText}
-            resultCount={galleryCards.length}
+            resultCount={visibleCards.length}
           />
 
-          {galleryCards.length > 0 ? (
+          {visibleCards.length > 0 ? (
             <div className="card-grid">
-              {galleryCards.map((card) => (
-                <CardTile
+              {visibleCards.map((card) => (
+                <ArtworkCard
                   key={card.id}
                   card={card}
-                  onOpen={setSelectedId}
-                  onLike={handleLike}
-                  onReport={setReportingId}
+                  onOpen={setOpenCardId}
+                  onLike={toggleHeart}
+                  onReport={setReportingCardId}
                 />
               ))}
             </div>
@@ -209,7 +283,7 @@ function App() {
             </p>
           )}
 
-          {cards.length === 1 && galleryCards.length === 1 && (
+          {cards.length === 1 && visibleCards.length === 1 && (
             <p className="gallery-note">
               The wall is just opening. Post your card below and it will be pinned
               here beside the featured artist.
@@ -217,44 +291,83 @@ function App() {
           )}
         </section>
 
-        {/* One card per artist: after posting, the form is replaced by a notice */}
         {myCard ? (
-          <PostedNotice card={myCard} onView={setSelectedId} onEdit={openEditor} />
+          <section className="section upload" id="upload" aria-labelledby="posted-title">
+            <p className="eyebrow">You&rsquo;re in the gallery</p>
+            <h2 id="posted-title">Your card is live</h2>
+            <p className="section-intro">
+              &ldquo;{myCard.title}&rdquo; is pinned at the top of the gallery. You can
+              still edit it any time.
+            </p>
+            <div className="hero-actions">
+              <button type="button" className="btn btn-primary" onClick={() => setOpenCardId(myCard.id)}>
+                View my card
+              </button>
+              <button type="button" className="btn btn-ghost" onClick={() => openEditor(myCard.id)}>
+                Edit my card
+              </button>
+            </div>
+            <p className="fineprint">
+              Demo note: editing works while this page is open, but nothing is saved, so a
+              refresh clears it.
+            </p>
+          </section>
         ) : (
-          <UploadForm categories={CATEGORIES} onAddCard={handleAddCard} />
+          <PostCardForm categories={CATEGORIES} onAddCard={addCard} />
         )}
 
-        <AboutSection cards={cards} categories={CATEGORIES} />
+        <AboutGallery cards={cards} categories={CATEGORIES} />
       </main>
 
-      <Footer galleryName={GALLERY_NAME} />
+      <footer className="site-footer">
+        <p>
+          &copy; {CURRENT_YEAR} {GALLERY_NAME}. Every artwork belongs to its artist. Please
+          don&rsquo;t copy or repost without permission.
+          <br />
+          Background: a painted reproduction of <i>The Starry Night</i> by Vincent van Gogh (1889, public domain).
+          <br />
+          Want to see more art? Visit these free collections:
+        </p>
+        <ul className="footer-links">
+          <li>
+            <a href="https://www.metmuseum.org/art/collection" target="_blank" rel="noopener noreferrer">
+              The Met Collection
+            </a>
+          </li>
+          <li>
+            <a href="https://artsandculture.google.com/" target="_blank" rel="noopener noreferrer">
+              Google Arts &amp; Culture
+            </a>
+          </li>
+        </ul>
+      </footer>
 
-      {selectedCard && (
-        <CardViewer
-          key={selectedCard.id}
-          card={selectedCard}
-          onLike={handleLike}
-          onReport={setReportingId}
+      {openCard && (
+        <ArtworkViewer
+          key={openCard.id}
+          card={openCard}
+          onLike={toggleHeart}
+          onReport={setReportingCardId}
           onEdit={openEditor}
-          onClose={() => setSelectedId(null)}
+          onClose={() => setOpenCardId(null)}
         />
       )}
 
       {editingCard && (
-        <EditCardDialog
+        <EditCardPopup
           card={editingCard}
           categories={CATEGORIES}
-          onSave={handleSaveEdit}
-          onDelete={handleDeleteCard}
-          onCancel={() => setEditingId(null)}
+          onSave={saveCardEdits}
+          onDelete={deleteCard}
+          onCancel={() => setEditingCardId(null)}
         />
       )}
 
       {reportingCard && (
-        <ReportDialog
+        <ReportPopup
           title={reportingCard.title}
-          onSubmit={handleReport}
-          onCancel={() => setReportingId(null)}
+          onSubmit={reportCard}
+          onCancel={() => setReportingCardId(null)}
         />
       )}
     </div>

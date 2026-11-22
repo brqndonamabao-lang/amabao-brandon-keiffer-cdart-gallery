@@ -1,12 +1,19 @@
 import { useEffect } from 'react';
 
-// ConfirmDialog: a small yes/no pop-up.
-// Props: title, message, confirmLabel, cancelLabel, onConfirm, onCancel
-function ConfirmDialog({ title, message, confirmLabel, cancelLabel, onConfirm, onCancel }) {
-  // Escape key = the same as choosing "cancel".
-  // The listener is re-added when onCancel changes, so it always calls the latest one.
-  // It listens in the "capture" phase and stops the event, so when this pop-up
-  // sits on top of the big picture view, Escape closes ONLY this pop-up.
+// ============================================================
+// VIDEO PART 6 - REACT: a reusable pop-up component.
+// It is used for "post without a caption?" and "delete this card?".
+// ============================================================
+//
+// ConfirmPopup = a small yes/no pop-up.
+//
+// PROPS: title, message, confirmLabel, cancelLabel, onConfirm, onCancel
+
+function ConfirmPopup({ title, message, confirmLabel, cancelLabel, onConfirm, onCancel }) {
+  // PART 5 - Keyboard: Escape means the same as choosing "cancel".
+  // The listener uses the "capture" phase and stops the event, so when
+  // this pop-up sits on top of the big picture view, Escape closes ONLY
+  // this pop-up.
   useEffect(() => {
     const handleKey = (event) => {
       if (event.key === 'Escape') {
@@ -42,4 +49,4 @@ function ConfirmDialog({ title, message, confirmLabel, cancelLabel, onConfirm, o
   );
 }
 
-export default ConfirmDialog;
+export default ConfirmPopup;

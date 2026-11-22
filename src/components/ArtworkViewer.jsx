@@ -1,29 +1,43 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import MediaView from './MediaView';
-import SocialLink from './SocialLink';
+import { WorkMedia } from './ArtworkCard';
+import { getPlatformName } from '../utils/links';
 
-// CardViewer: opens ONE card as a full-screen art view.
-// LEFT: the artwork, as large as the screen allows, with only a close button
-//       and a native horizontal scroll bar. Use the mouse wheel, swipe on a
-//       touch screen, or press ← → to move. Click an image to zoom.
-// RIGHT: title, artist, caption, social links, hearts and copy-link action.
-// Props: card, onLike, onReport, onEdit, onClose
-function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
+// ============================================================
+// VIDEO PART 5 - JAVASCRIPT: effects, timers, keyboard events.
+// VIDEO PART 6 - REACT: useState + useEffect + props.
+// VIDEO PART 8 - WALKTHROUGH: open a card and show this screen.
+// ============================================================
+//
+// ArtworkViewer = the full-screen view of ONE card.
+// LEFT:  the artwork (scroll sideways, click an image to zoom).
+// RIGHT: title, artist, caption, follow links, heart, copy link.
+//
+// PROPS: card, onLike, onReport, onEdit, onClose
+//
+// PART 6 - STATE: `index` remembers which work is showing,
+// `zoomIndex` remembers which image is zoomed, and `copied`
+// remembers whether the "Copied!" message is visible.
+//
+// PART 5 - EFFECTS: the effects handle the keyboard, the mouse
+// wheel, and the page scroll lock. `FollowLinks` is a small helper
+// that shows one follow button per social link.
+
+function ArtworkViewer({ card, onLike, onReport, onEdit, onClose }) {
   const { id, title, author, category, caption, socials, works, likes, liked, isMine } = card;
   const stageRef = useRef(null);
   const wheelLock = useRef(0);
   const copiedTimer = useRef(null);
+
+  // PART 6 - STATE: which work is showing, which one is zoomed, and
+  // whether the "Copied!" message is visible.
   const [index, setIndex] = useState(0);
-  const [zoomIndex, setZoomIndex] = useState(null); // which work is zoomed, or null
+  const [zoomIndex, setZoomIndex] = useState(null);
   const [copied, setCopied] = useState(false);
+
   const lastIndex = works.length - 1;
   const current = works[index];
-  // Derived state: zoom is true only while the zoomed work is the visible one.
-  // Changing work automatically leaves zoom mode - no effect needed.
   const zoomed = zoomIndex === index;
 
-  // Move to a given work, staying inside 0 .. lastIndex.
-  // The stage is a real scroll area, so we scroll it instead of moving a row.
   const goTo = useCallback((number) => {
     const stage = stageRef.current;
     const next = Math.max(0, Math.min(lastIndex, number));
@@ -33,7 +47,7 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
     }
   }, [lastIndex]);
 
-  // Keep the page behind the viewer from scrolling while it is open
+  // PART 5 - useEffect: stop the page behind the viewer from scrolling.
   useEffect(() => {
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -42,21 +56,21 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
     };
   }, []);
 
-  // Mouse wheel: turn vertical wheel clicks into sideways movement through
-  // the works. Touch screens keep their natural native swipe, and a trackpad's
-  // horizontal gesture is left alone so it scrolls smoothly.
+  // PART 5 - Mouse wheel: turn vertical wheel clicks into sideways movement.
+  // Touch screens keep their natural swipe, and a trackpad's horizontal
+  // gesture is left alone so it scrolls smoothly.
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage || works.length < 2) return undefined;
 
     const handleWheel = (event) => {
-      if (event.target.closest('video')) return; // let the video keep its controls
+      if (event.target.closest('video')) return;
       if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
       if (event.deltaY === 0) return;
 
       event.preventDefault();
       const now = Date.now();
-      if (now - wheelLock.current < 300) return; // one work per wheel click
+      if (now - wheelLock.current < 300) return;
       wheelLock.current = now;
       goTo(index + (event.deltaY > 0 ? 1 : -1));
     };
@@ -65,8 +79,6 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
     return () => stage.removeEventListener('wheel', handleWheel);
   }, [index, lastIndex, works.length, goTo]);
 
-  // Keep the active work in step with the native scroll position (this is
-  // what makes swiping on a phone and dragging the scroll bar work).
   const handleScroll = () => {
     const stage = stageRef.current;
     if (!stage || stage.clientWidth === 0) return;
@@ -74,7 +86,6 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
     setIndex((currentIndex) => (currentIndex === nearest ? currentIndex : nearest));
   };
 
-  // Clear the "Copied!" timer if the viewer closes first
   useEffect(
     () => () => {
       if (copiedTimer.current) clearTimeout(copiedTimer.current);
@@ -82,7 +93,8 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
     []
   );
 
-  // Keyboard: Escape closes zoom first, then the card. ← → change work.
+  // PART 5 - Keyboard: Escape closes zoom first, then the card.
+  // The ← and → arrow keys change the work.
   useEffect(() => {
     const handleKey = (event) => {
       if (event.key === 'Escape') {
@@ -99,14 +111,12 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
     return () => window.removeEventListener('keydown', handleKey);
   }, [onClose, index, zoomed, goTo]);
 
-  // ---- Share / copy a link to this card ----
   const cardLink = `${window.location.origin}${window.location.pathname}#card-${id}`;
 
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(cardLink);
     } catch {
-      // Fallback for browsers without the clipboard API
       const area = document.createElement('textarea');
       area.value = cardLink;
       area.style.position = 'fixed';
@@ -142,7 +152,7 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
                       : undefined
                   }
                 >
-                  <MediaView
+                  <WorkMedia
                     work={work}
                     alt={`${title} by ${author}, work ${number + 1} of ${works.length}`}
                     controls={number === index}
@@ -179,7 +189,7 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
 
         {caption && <p className="viewer-caption">{caption}</p>}
 
-        <SocialLink urls={socials} artist={author} />
+        <FollowLinks urls={socials} artist={author} />
 
         <div className="viewer-actions">
           <button
@@ -221,4 +231,38 @@ function CardViewer({ card, onLike, onReport, onEdit, onClose }) {
   );
 }
 
-export default CardViewer;
+/* PART 6 - FOLLOWLINKS HELPER
+   ------------------------------------------------------------
+   This small helper shows one "Follow" button per social media
+   link. It uses `getPlatformName` to turn a long address into a
+   friendly name like "Instagram" or "TikTok". */
+function FollowLinks({ urls, artist }) {
+  if (!urls || urls.length === 0) return null;
+
+  return (
+    <div className="social-block">
+      <span className="social-label">Follow {artist}:</span>
+      <ul className="social-list">
+        {urls.map((url) => {
+          const platform = getPlatformName(url);
+          return (
+            <li key={url}>
+              <a
+                className="social-link"
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                title={url}
+                aria-label={`Follow ${artist} on ${platform} (opens in a new tab)`}
+              >
+                {platform}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+export default ArtworkViewer;

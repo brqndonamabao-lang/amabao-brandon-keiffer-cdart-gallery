@@ -1,12 +1,25 @@
-import MediaView from './MediaView';
+// ============================================================
+// VIDEO PART 3 - STRUCTURE: one square card in the gallery.
+// VIDEO PART 6 - REACT: App draws this once per card with .map().
+// ============================================================
+//
+// ArtworkCard = the WHOLE card (picture + title + heart + report).
+// It is not just the title. The title is the <h3> inside it.
+//
+// PROPS:
+//   card     -> one object from the cards array in App.jsx
+//   onOpen   -> function to open the big viewer
+//   onLike   -> function to add or remove a heart
+//   onReport -> function to open the report pop-up
+//
+// PART 3 - HTML ELEMENTS USED HERE:
+// <article> is one complete card. <h3> is the title. <button> is
+// used for anything clickable. The cover is a button because
+// clicking it opens the viewer.
 
-// CardTile: ONE square card in the gallery. App renders it once per card with .map().
-// Clicking the cover opens the card viewer.
-// Props (read-only): card, onOpen, onLike, onReport
-function CardTile({ card, onOpen, onLike, onReport }) {
+function ArtworkCard({ card, onOpen, onLike, onReport }) {
   const { id, title, author, works, likes, liked, isMine } = card;
 
-  // A visitor who reported this card sees a short note instead of the artwork
   if (card.reportedByMe) {
     return (
       <article className="card-tile card-tile-reported">
@@ -17,13 +30,14 @@ function CardTile({ card, onOpen, onLike, onReport }) {
 
   return (
     <article className="card-tile">
+
       <button
         type="button"
         className={works.length > 1 ? 'tile-cover tile-cover-deck' : 'tile-cover'}
         onClick={() => onOpen(id)}
         aria-label={`Open ${title} by ${author}, ${works.length} ${works.length === 1 ? 'work' : 'works'}`}
       >
-        <MediaView work={works[0]} alt="" controls={false} />
+        <WorkMedia work={works[0]} alt="" controls={false} />
         <span className="tile-count">
           {works[0].type === 'video' ? '▶ ' : ''}{works.length} {works.length === 1 ? 'work' : 'works'}
         </span>
@@ -61,4 +75,26 @@ function CardTile({ card, onOpen, onLike, onReport }) {
   );
 }
 
-export default CardTile;
+/* PART 6 - WORKMEDIA HELPER
+   ------------------------------------------------------------
+   This small helper shows ONE work as an <img> or a <video>.
+   ArtworkViewer imports it too, so the "picture or video?" choice
+   lives in one place instead of being repeated in two files. */
+export function WorkMedia({ work, alt, controls = true }) {
+  if (work.type === 'video') {
+    return (
+      <video
+        src={controls ? work.url : `${work.url}#t=0.1`}
+        controls={controls}
+        muted={!controls}
+        playsInline
+        preload="metadata"
+        aria-label={alt}
+      />
+    );
+  }
+
+  return <img src={work.url} alt={alt} loading="lazy" draggable="false" />;
+}
+
+export default ArtworkCard;

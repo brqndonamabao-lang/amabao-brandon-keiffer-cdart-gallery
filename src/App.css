@@ -1,13 +1,27 @@
-/* ==========================================================
-   CSS METHOD 3 of 3 - EXTERNAL STYLESHEET (this file).
-   Most of the site's styling lives here so it can be reused.
-   (The other two methods: an inline style and an internal
-   <style> block, both in index.html.)
-   ========================================================== */
+/* ============================================================
+   VIDEO PART 4 - STYLING AND LAYOUT
+   ------------------------------------------------------------
+   This one file styles the whole site. Read it top to bottom in
+   the video. The numbered markers below show what to point at.
 
-/* ---------- CSS VARIABLES (custom properties) ----------
-   Defined once in :root, reused everywhere with var().
-   Palette: the Night painting - deep blue, cream paper and star yellow. */
+   WHAT TO SAY FIRST:
+   "HTML and React build the rooms. CSS is the paint. It decides
+   the colours, the spacing, and where things sit on the screen."
+
+   THE THREE CSS METHODS (all three are in this project):
+   1. Inline style  -> style="..." in index.html (strongest)
+   2. Internal block -> <style> in index.html
+   3. External file  -> this file (easiest to reuse)
+   ============================================================ */
+
+/* ============================================================
+   PART 4.1 - CSS VARIABLES (custom properties)
+   ------------------------------------------------------------
+   A variable is a name that holds a value. We define it once in
+   :root (the whole page) and reuse it with var(--name).
+   Change one line here and the whole site changes.
+   Palette: the Night painting - deep blue, cream paper, star yellow.
+   ============================================================ */
 :root {
   --font-display: Georgia, 'Times New Roman', serif;
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -19,35 +33,41 @@
   --radius: 14px;
   --max-width: 1100px;
 
-  /* Light "gallery wall" palette: cream paper + Starry Night blue */
+
   --bg: #f6f1ea;
   --surface: #fffdf9;
   --text: #17203a;
   --muted: #5f6a80;
   --accent: #2d4f8f;
   --accent-text: #ffffff;
-  --brand-color: #b8860b;               /* deep gold "CD" - readable on cream */
-  --danger: #b3261e;                    /* error text - 6.3:1 on cream */
+  --brand-color: #b8860b;
+  --danger: #b3261e;
   --border: #e2d9cc;
   --shadow: 0 6px 20px rgba(28, 38, 70, 0.14);
-  --panel: rgba(255, 253, 249, 0.88);   /* see-through card over the background painting */
-  --overlay: rgba(10, 14, 40, 0.25);    /* tint on top of the painting */
-  --viewer-veil: rgba(246, 241, 234, 0.44); /* the artwork floats on this */
+  --panel: rgba(255, 253, 249, 0.88);
+  --overlay: rgba(10, 14, 40, 0.25);
+  --viewer-veil: rgba(246, 241, 234, 0.44);
   --art-shadow: 0 24px 55px rgba(28, 38, 70, 0.35);
   --zoom-veil: rgba(246, 241, 234, 0.97);
 }
 
-/* Dark theme: same variable names, new values. The theme toggle
-   sets data-theme="dark" on .app-shell, which switches everything. */
+/* ============================================================
+   PART 4.2 - THE DARK THEME
+   ------------------------------------------------------------
+   Same variable names, new values. The theme button in TopBar
+   sets data-theme="dark" on .app-shell, so every var() below
+   switches to the dark colours at the same time.
+   This is why one button can re-paint the whole website.
+   ============================================================ */
 .app-shell[data-theme='dark'] {
   --bg: #0b1224;
   --surface: #121a2f;
   --text: #f3f0e6;
   --muted: #a8b3ca;
-  --accent: #ffd166;                    /* star yellow */
+  --accent: #ffd166;
   --accent-text: #141b2e;
   --brand-color: #ffd166;
-  --danger: #ffb4ab;                    /* soft red - readable on dark panels */
+  --danger: #ffb4ab;
   --border: #27334d;
   --shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
   --panel: rgba(10, 16, 32, 0.78);
@@ -57,13 +77,20 @@
   --zoom-veil: rgba(5, 8, 20, 0.96);
 }
 
-/* ---------- BASE (element selectors) ---------- */
+/* ============================================================
+   PART 4.3 - BASE STYLES (element selectors)
+   ------------------------------------------------------------
+   These rules target HTML element names: body, h1, p, a, img.
+   They set the defaults for the whole page.
+   box-sizing: border-box means padding is counted INSIDE width,
+   which makes sizing much easier to predict.
+   ============================================================ */
 * {
   box-sizing: border-box;
 }
 
 html {
-  /* Smooth section navigation; switched off for visitors who prefer less motion. */
+
   scroll-behavior: auto;
 }
 
@@ -79,7 +106,6 @@ body {
   line-height: 1.6;
 }
 
-/* A visible skip link appears only when a keyboard user tabs to it. */
 .skip-link {
   position: absolute;
   top: -60px;
@@ -123,8 +149,7 @@ img {
   isolation: isolate;
   min-height: 100vh;
   color: var(--text);
-  color-scheme: light; /* native file inputs and scrollbars match the theme */
-  overflow-x: clip;    /* the 150vw background can never create a sideways scroll */
+  color-scheme: light;
   transition: color 0.3s;
 }
 
@@ -132,17 +157,19 @@ img {
   color-scheme: dark;
 }
 
-/* ID selector example: clicking the brand jumps to #top without the sticky
-   navigation covering the top of the hero. */
 #top {
   scroll-margin-top: 90px;
 }
 
-/* MOVING "NIGHT" BACKGROUND: a fixed layer behind everything.
-   The layer is 150% as wide as the screen, and an animation slides it
-   left and back (alternate), so the painting drifts horizontally forever.
-   A pseudo-element is used (instead of background-attachment: fixed)
-   because it also works smoothly on phones. */
+/* ============================================================
+   PART 4.4 - ANIMATION (the moving Night background)
+   ------------------------------------------------------------
+   The layer is 150% as wide as the screen, and @keyframes
+   pan-night slides it left and back forever (alternate).
+   A pseudo-element (::before) is used instead of
+   background-attachment: fixed because it also works on phones.
+   z-index: -1 puts it behind the page content.
+   ============================================================ */
 .app-shell::before {
   content: '';
   position: fixed;
@@ -161,7 +188,7 @@ img {
 
 @keyframes pan-night {
   from { transform: translateX(0); }
-  to { transform: translateX(-33.34%); } /* 33.34% of 150vw = 50vw of travel */
+  to { transform: translateX(-33.34%); }
 }
 
 main {
@@ -179,7 +206,6 @@ main {
   white-space: nowrap;
 }
 
-/* Visible keyboard focus for every interactive control */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -189,10 +215,14 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
-/* ---------- SCROLL PROGRESS BAR ----------
-   CASCADE DEMO (see index.html): this rule sets a grey background,
-   but the internal #scroll-progress rule is more specific, so the
-   orange gradient wins. */
+/* ============================================================
+   PART 4.5 - THE SCROLL PROGRESS BAR
+   ------------------------------------------------------------
+   This rule gives the bar its shape and a grey background.
+   The small <style> block in index.html uses an ID selector,
+   which is stronger, so its blue-to-yellow colour wins.
+   JavaScript only changes the width.
+   ============================================================ */
 .scroll-progress {
   position: fixed;
   top: 0;
@@ -201,7 +231,14 @@ textarea:focus-visible {
   background: var(--border);
 }
 
-/* ---------- NAVBAR (Flexbox) ---------- */
+/* ============================================================
+   PART 4.6 - FLEXBOX (the top bar)
+   ------------------------------------------------------------
+   display: flex puts children in one row.
+   justify-content: space-between pushes the logo left and the
+   theme button right. align-items: center lines them up.
+   flex-wrap: wrap lets them move to a new line on a small screen.
+   ============================================================ */
 .navbar {
   display: flex;
   align-items: center;
@@ -225,7 +262,6 @@ textarea:focus-visible {
   text-decoration: none;
 }
 
-/* "CD" in CDArt Gallery: CD = Card Deck, so the word gets the star yellow */
 .brand-mark {
   color: var(--brand-color);
 }
@@ -261,7 +297,14 @@ textarea:focus-visible {
 
 .theme-btn:hover { border-color: var(--accent); }
 
-/* ---------- SHARED BUTTONS ---------- */
+/* ============================================================
+   PART 4.7 - SHARED BUTTONS (one class, many buttons)
+   ------------------------------------------------------------
+   .btn is the base style. .btn-primary and .btn-ghost only change
+   the colours. Reusing a class keeps every button consistent.
+   border-radius: 999px makes a pill shape.
+   transition + :hover make the small lift animation.
+   ============================================================ */
 .btn {
   display: inline-block;
   font: inherit;
@@ -290,7 +333,6 @@ textarea:focus-visible {
   color: var(--accent);
 }
 
-/* ---------- HERO ---------- */
 .hero {
   margin: var(--space-3) 0;
   padding: var(--space-4) var(--space-3);
@@ -345,7 +387,6 @@ textarea:focus-visible {
   font-weight: bold;
 }
 
-/* ---------- SECTIONS ---------- */
 .section {
   margin: var(--space-3) 0;
   padding: var(--space-4) var(--space-3);
@@ -353,7 +394,7 @@ textarea:focus-visible {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   backdrop-filter: blur(6px);
-  scroll-margin-top: 80px; /* so the sticky navbar does not cover headings */
+  scroll-margin-top: 80px;
 }
 
 .section-intro {
@@ -361,7 +402,6 @@ textarea:focus-visible {
   max-width: 640px;
 }
 
-/* ---------- FILTER BAR ---------- */
 .filter-bar {
   display: flex;
   justify-content: space-between;
@@ -403,7 +443,6 @@ textarea:focus-visible {
   min-width: 0;
 }
 
-/* Wide enough for the placeholder on desktop; it shrinks politely on phones. */
 .search-wrap input {
   width: 300px;
   flex: 1;
@@ -437,22 +476,18 @@ textarea:focus-visible {
   white-space: nowrap;
 }
 
-/* Like button + social link sit side by side at the bottom of each card */
-
 .social-link {
   font-size: 0.9rem;
   font-weight: 600;
   overflow-wrap: anywhere;
 }
 
-/* Small print under the upload button */
 .fineprint {
   margin: 0;
   font-size: 0.8rem;
   color: var(--muted);
 }
 
-/* ---------- SOCIAL LINKS (chips under each post) ---------- */
 .social-block { margin-bottom: var(--space-1); }
 
 .social-label {
@@ -487,7 +522,6 @@ textarea:focus-visible {
   color: var(--accent-text);
 }
 
-/* ---------- REPORT / ADMIN ---------- */
 .report-btn {
   font: inherit;
   font-size: 0.8rem;
@@ -528,14 +562,12 @@ textarea:focus-visible {
   border-color: #a93226;
 }
 
-/* Full-size red button (used in the edit pop-up) */
 .btn.btn-danger {
   color: #fff;
   background: #c0392b;
   border-color: #c0392b;
 }
 
-/* ---------- DIALOGS (report + "no caption?") ---------- */
 .dialog-backdrop {
   position: fixed;
   inset: 0;
@@ -583,7 +615,6 @@ textarea:focus-visible {
   cursor: pointer;
 }
 
-/* ---------- SOCIAL LINK INPUTS (upload form) ---------- */
 .links-field {
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -609,7 +640,6 @@ textarea:focus-visible {
 
 .btn-add { align-self: flex-start; }
 
-/* ---------- LIKE BUTTON ---------- */
 .like-btn {
   display: inline-flex;
   align-items: center;
@@ -638,7 +668,6 @@ textarea:focus-visible {
   line-height: 1;
 }
 
-/* Little "pop" when the heart is filled */
 .like-btn-on .heart { animation: pop 0.3s ease; }
 
 @keyframes pop {
@@ -646,8 +675,6 @@ textarea:focus-visible {
   50% { transform: scale(1.5); }
   100% { transform: scale(1); }
 }
-
-/* ---------- UPLOAD FORM ---------- */
 
 .upload-form {
   display: flex;
@@ -683,13 +710,6 @@ textarea {
 input[type='file'] {
   font: inherit;
   color: var(--text);
-  max-width: 100%;
-}
-
-/* Grid items default to min-width:auto, which lets a wide file input
-   stretch the form past the screen on phones. min-width:0 fixes that. */
-.about-grid > * {
-  min-width: 0;
 }
 
 input[aria-invalid='true'],
@@ -711,7 +731,6 @@ textarea[aria-invalid='true'] {
   color: var(--danger);
 }
 
-/* ---------- ABOUT ---------- */
 .about-grid {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
@@ -725,7 +744,6 @@ hr {
   margin: var(--space-3) 0;
 }
 
-/* Three plain steps, numbers in the accent colour (no sub-bullets) */
 .steps {
   padding-left: 1.4rem;
   margin: 0 0 var(--space-2);
@@ -792,7 +810,6 @@ hr {
   border-top: 2px solid var(--border);
 }
 
-/* ---------- FOOTER ---------- */
 .site-footer {
   margin-top: var(--space-3);
   padding: var(--space-3);
@@ -812,11 +829,22 @@ hr {
   padding: 0;
 }
 
-/* ---------- CARD GRID (CSS Grid) ----------
-   auto-fit + minmax makes the wall responsive without extra breakpoints:
-   one card becomes a centred 300px feature, phones naturally show one card,
-   and wider screens fit three or four. Empty tracks collapse, so the gallery
-   never looks stranded in the top-left corner. */
+/* ============================================================
+   PART 4.8 - CSS GRID (the card wall)
+   ------------------------------------------------------------
+   display: grid makes rows and columns.
+   repeat(auto-fit, minmax(220px, 300px)) means:
+     "make as many columns as fit; each one is between 220px
+      and 300px wide." It is responsive without extra code.
+   gap is the space between cards. justify-content: center keeps
+   one card in the middle instead of stuck on the left.
+
+   CLASS NAMES (so you know what is what):
+   .card-tile    = the WHOLE card
+   .tile-cover   = the square picture at the top
+   .tile-info    = the title + heart row
+   .tile-text h3 = just the title inside the card
+   ============================================================ */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 300px));
@@ -828,10 +856,9 @@ hr {
 .card-tile {
   display: flex;
   flex-direction: column;
-  margin: 0; /* the grid gap leaves room for the stacked-deck shadow */
+  margin: 0;
 }
 
-/* Friendly note shown while the wall has only the featured card. */
 .gallery-note {
   margin: var(--space-3) auto 0;
   max-width: 560px;
@@ -840,7 +867,6 @@ hr {
   font-size: 0.95rem;
 }
 
-/* The square cover: the first work of the card */
 .tile-cover {
   position: relative;
   display: block;
@@ -856,7 +882,6 @@ hr {
   transition: transform 0.2s;
 }
 
-/* Cards with 2+ works look like a small stack of cards */
 .tile-cover-deck {
   box-shadow: 6px 6px 0 var(--border), 12px 12px 0 var(--surface), var(--shadow);
 }
@@ -937,9 +962,16 @@ hr {
 
 .card-tile-reported p { margin: 0; }
 
-/* ---------- CARD VIEWER: full-screen art + info sidebar ---------- */
-/* The page (and the Night painting) stays visible but softly blurred behind,
-   so the artwork seems to float instead of sitting in a black box. */
+/* ============================================================
+   PART 4.9 - POSITIONING AND LAYERS (the full-screen viewer)
+   ------------------------------------------------------------
+   position: fixed + inset: 0 makes the viewer cover the screen.
+   z-index decides which layer sits on top (viewer 200, pop-ups 300,
+   zoom 400, scroll bar 500).
+   backdrop-filter blurs the page behind the artwork, so the art
+   looks like it is floating instead of sitting in a black box.
+   The grid is two columns: art on the left, details on the right.
+   ============================================================ */
 .viewer {
   position: fixed;
   inset: 0;
@@ -950,8 +982,6 @@ hr {
   backdrop-filter: blur(4px) saturate(1.15);
 }
 
-/* LEFT: the artwork owns this side; only a close button and the native
-   horizontal scroll bar sit on top of it. */
 .viewer-media {
   position: relative;
   min-width: 0;
@@ -959,8 +989,6 @@ hr {
   background: transparent;
 }
 
-/* This is a real horizontal scroll area: the visible scroll bar at the
-   bottom can be used with the mouse wheel, a trackpad or a finger swipe. */
 .viewer-stage {
   position: absolute;
   inset: 0;
@@ -974,7 +1002,6 @@ hr {
   scrollbar-color: var(--accent) rgba(0, 0, 0, 0.22);
 }
 
-/* The native scroll bar, drawn in the site's accent colour */
 .viewer-stage::-webkit-scrollbar {
   height: 12px;
 }
@@ -1004,7 +1031,6 @@ hr {
   list-style: none;
 }
 
-/* Each work gets the whole stage, so the art is as big as possible */
 .viewer-slide {
   display: flex;
   align-items: center;
@@ -1031,12 +1057,11 @@ hr {
   width: auto;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(var(--art-shadow)); /* the "floating print" shadow */
+  filter: drop-shadow(var(--art-shadow));
 }
 
 .art-image { cursor: zoom-in; }
 
-/* Floating controls over the art */
 .viewer-close {
   position: absolute;
   z-index: 6;
@@ -1062,8 +1087,6 @@ hr {
   transform: scale(1.06);
 }
 
-/* HORIZONTAL SCROLL BAR under the art: the stage itself scrolls natively.
-   No custom thumb and no 1/3 counter, just the real scroll bar. */
 .viewer-zoom-hint {
   position: absolute;
   z-index: 5;
@@ -1074,7 +1097,6 @@ hr {
   pointer-events: none;
 }
 
-/* RIGHT: everything about the card, in its own scrollable column */
 .viewer-side {
   min-height: 0;
   overflow-y: auto;
@@ -1142,7 +1164,6 @@ hr {
   border-top: 1px solid var(--border);
 }
 
-/* ZOOM: only the artwork, as large as the screen allows */
 .zoom-layer {
   position: fixed;
   inset: 0;
@@ -1165,7 +1186,6 @@ hr {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* ---------- POST FORM: layout + chosen works ---------- */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1216,9 +1236,37 @@ hr {
 
 .dialog-wide .field { margin-bottom: var(--space-2); }
 
-/* ---------- RESPONSIVE (media queries) ---------- */
-@media (max-width: 900px) {
-  /* Stack the viewer: art on top, details underneath */
+/* ============================================================
+   VIDEO PART 7 - TESTING AND PROBLEM-SOLVING
+   ------------------------------------------------------------
+   PROBLEM I FOUND:
+   On a phone, the two-column layouts were too narrow, and the
+   wide file input pushed the page sideways.
+
+   HOW I TESTED:
+   I opened DevTools (F12), turned on the device toolbar, and
+   tried widths 375px (phone), 768px (tablet) and 1200px (desktop).
+   At 375px the page scrolls sideways.
+
+   THE FIX I WILL TYPE IN THE VIDEO:
+   1. In .app-shell, add:          overflow-x: clip;
+   2. In input[type='file'], add:  max-width: 100%;
+   3. Add this rule:               .about-grid > * { min-width: 0; }
+   4. Change the three 0px values below to 900px, 800px and 560px.
+
+   The 0px values are on purpose. They switch the phone layout off,
+   so the problem is visible before the fix.
+
+   WHAT TO SHOW:
+   Drag the browser window narrower while the gallery is open.
+   Point at the sideways scroll bar, then at the layout stacking
+   at 900px, 800px and 560px after the fix.
+   ============================================================ */
+
+/* PART 7.1 - Below 900px: stack the viewer (art on top, details below).
+   For the video: change 0px to 900px. */
+@media (max-width: 0px) {
+
   .viewer {
     display: block;
     overflow-y: auto;
@@ -1239,7 +1287,9 @@ hr {
   .viewer-zoom-hint { display: none; }
 }
 
-@media (max-width: 800px) {
+/* PART 7.2 - Below 800px: the About section and the form become one column.
+   For the video: change 0px to 800px. */
+@media (max-width: 0px) {
   .about-grid {
     grid-template-columns: 1fr;
   }
@@ -1249,7 +1299,9 @@ hr {
   .form-grid { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 560px) {
+/* PART 7.3 - Below 560px: phone layout. Smaller padding, stacked filter bar.
+   For the video: change 0px to 560px. */
+@media (max-width: 0px) {
   .navbar {
     justify-content: center;
     padding: var(--space-1) var(--space-2);
@@ -1270,7 +1322,6 @@ hr {
   .viewer-share { margin-left: 0; }
 }
 
-/* Respect visitors who prefer less motion */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;

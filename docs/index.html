@@ -1,6 +1,36 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!--
+      ============================================================
+      VIDEO PART 3 - DEVELOPMENT SETUP AND STRUCTURE
+      TOPIC 1 OF 4: index.html (the shell of the website)
+      ------------------------------------------------------------
+      Hello everyone. This is index.html. It is the only real HTML
+      file in the project. When the browser opens the website, this
+      is the first file it reads.
+
+      The <head> part is information ABOUT the page. You do not see
+      it on the page itself. It gives the browser the title you see
+      on the tab, the small icon (favicon), and a description for
+      search engines. The <title> tag is the words on the browser
+      tab. The <meta> tags are extra information for the browser.
+
+      The <body> part is what people actually see. Inside it there
+      is an empty box: <div id="root"></div>. That box is empty on
+      purpose. React will fill it with the whole gallery.
+
+      At the bottom, the <script> tag starts React. In the source
+      code it points to /src/main.jsx. The production build replaces
+      it with one bundled file. That is how the browser knows to
+      run our React code.
+
+      So the story is: index.html gives the browser a title, an
+      icon, and an empty box called root. React takes over from
+      there. The next topic is src/main.jsx, which is the file that
+      finds that box and starts React inside it.
+      ============================================================
+    -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
@@ -14,30 +44,55 @@
     <title>CDArt Gallery | Card Gallery for Artists</title>
 
     <!--
-      CSS METHOD 2 of 3 - INTERNAL CSS (a <style> block in the document head).
-      Used for the tiny scroll-progress bar that lives OUTSIDE the React app,
-      so it is styled right here next to its script.
+      ============================================================
+      VIDEO PART 4 - STYLING AND LAYOUT
+      EXAMPLE 1 OF 3: internal CSS (a <style> block in the head)
+      ------------------------------------------------------------
+      This tiny style block colours the thin scroll bar at the very
+      top of the page. It lives here instead of App.css because the
+      bar sits outside React, so its style stays next to its script.
 
-      CASCADE DEMO: the external stylesheet (src/App.css) also styles
-      .scroll-progress (height 4px, grey background). Because this internal
-      block uses an ID selector (#scroll-progress), it is MORE SPECIFIC than
-      the external class selector, so the accent gradient defined here wins.
-      The inline style on the element (width) wins over everything else for
-      the properties it sets.
+      Two CSS rules can disagree about the same thing. When that
+      happens, the more specific selector wins. An ID selector
+      (#scroll-progress) is stronger than a class selector
+      (.scroll-progress), so this blue-to-yellow colour wins over
+      the grey colour in App.css.
+
+      The width is not set here. It is set inline on the element
+      below, because JavaScript changes the width while you scroll.
+      ============================================================
     -->
     <style>#scroll-progress{z-index:100;background:linear-gradient(90deg,#3b5fa8,#ffd166)}</style>
-    <script type="module" crossorigin src="/amabao-brandon-keiffer-cdart-gallery/assets/index-CAv7pP87.js"></script>
+    <script type="module" crossorigin src="/amabao-brandon-keiffer-cdart-gallery/assets/index-h27G8VGF.js"></script>
     <link rel="stylesheet" crossorigin href="/amabao-brandon-keiffer-cdart-gallery/assets/index-B4kMz7jB.css">
   </head>
   <body>
     <!--
-      CSS METHOD 1 of 3 - INLINE CSS (style attribute).
-      Only the starting width is inline, because JavaScript changes it as you scroll.
-      The bar is decorative, so it is hidden from screen readers.
+      ============================================================
+      VIDEO PART 4 - STYLING AND LAYOUT
+      EXAMPLE 2 OF 3: inline CSS (the style="" attribute)
+      ------------------------------------------------------------
+      Inline CSS is the strongest of the three methods, but it is
+      hard to reuse. We only use it here for the starting width,
+      because JavaScript changes the width as you scroll.
+      aria-hidden="true" hides this decoration from screen readers.
+      ============================================================
     -->
     <div id="scroll-progress" class="scroll-progress" style="width: 0%" aria-hidden="true"></div>
 
-    <!-- React renders the whole website inside this one element -->
+    <!--
+      ============================================================
+      VIDEO PART 8 - FINAL WEBSITE WALKTHROUGH
+      ------------------------------------------------------------
+      This is the empty box from Part 3. When you open the site,
+      React puts everything inside it: the top bar, the welcome
+      area, the gallery, the post form, the About section, the
+      footer, and the pop-ups.
+
+      Show this in the browser, then open DevTools (F12) and point
+      at #root. Say: "Everything I built is inside this one box."
+      ============================================================
+    -->
     <div id="root"></div>
 
     <noscript>
@@ -58,8 +113,42 @@
       </p>
     </noscript>
 
-
-    <!-- Plain JavaScript (no React): direct DOM manipulation demo. See public/dom-demo.js -->
     <script src="/amabao-brandon-keiffer-cdart-gallery/dom-demo.js"></script>
+
+    <!--
+      ============================================================
+      VIDEO PART 9 - REFLECTION AND CLOSING
+      ------------------------------------------------------------
+      Go back to your face camera here. Do not read this word for
+      word. Use these prompts and say it in your own voice:
+
+      1. WHAT I LEARNED
+         "I learned how React breaks a page into small components,
+         how state makes the page update, and how CSS Grid and
+         Flexbox make the layout responsive."
+
+      2. THE HARDEST PART
+         Pick one real example. For example:
+         "The hardest part was the card viewer. I had to make the
+         artwork scroll sideways, keep the arrows and wheel in sync,
+         and still let Escape close the zoom first."
+
+      3. WHAT I AM PROUD OF
+         Pick one real example. For example:
+         "I am proud that the gallery works on a phone, that the
+         cards show a live count, and that the form checks mistakes
+         before posting."
+
+      4. WHAT I WOULD IMPROVE NEXT
+         "Next time I would add a real database and accounts, so
+         cards and hearts survive a refresh."
+
+      5. CLOSE
+         "Thank you for watching. This is CDArt Gallery."
+
+      REMEMBER: the rubric says do not read a script. These are
+      notes, not lines. Sound natural and point at the code.
+      ============================================================
+    -->
   </body>
 </html>
