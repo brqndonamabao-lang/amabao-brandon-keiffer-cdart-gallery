@@ -2,12 +2,11 @@ import { useRef, useState } from 'react';
 import { MAX_WORKS } from '../data/artworks';
 import { cleanLinks } from '../utils/links';
 import { MAX_LINKS, validateCardFields } from '../utils/validation';
-import ConfirmPopup from './ConfirmPopup';
 
 const MAX_IMAGE_MB = 5;
 const MAX_VIDEO_MB = 30;
 
-const emptyForm = { title: '', author: '', category: '', caption: '' };
+const emptyForm = { title: '', author: '', category: '' };
 
 function checkFile(file) {
   const isImage = file.type.startsWith('image/');
@@ -29,7 +28,7 @@ function checkFile(file) {
 // ============================================================
 //
 // PostCardForm = lets an artist post their ONE card with 1 to 5 works.
-// Social links are required, the caption is optional.
+// Social links are required.
 //
 // PROPS: categories, onAddCard
 //
@@ -48,10 +47,8 @@ function PostCardForm({ categories, onAddCard }) {
   const [works, setWorks] = useState([]);
   const [errors, setErrors] = useState({});
   const [fileNotice, setFileNotice] = useState('');
-  const [askNoCaption, setAskNoCaption] = useState(false);
   const [fileInputKey, setFileInputKey] = useState(0);
   const nextWorkId = useRef(1);
-  const captionRef = useRef(null);
 
   const linkErrors = errors.links || {};
 
@@ -110,7 +107,6 @@ function PostCardForm({ categories, onAddCard }) {
       title: values.title.trim(),
       author: values.author.trim(),
       category: values.category,
-      caption: values.caption.trim(),
       socials: cleanLinks(links),
       works,
     });
@@ -126,11 +122,6 @@ function PostCardForm({ categories, onAddCard }) {
     setErrors(foundErrors);
 
     if (Object.keys(foundErrors).length > 0) return;
-
-    if (values.caption.trim() === '') {
-      setAskNoCaption(true);
-      return;
-    }
 
     publish();
   };
@@ -188,21 +179,6 @@ function PostCardForm({ categories, onAddCard }) {
               ))}
             </select>
             {errors.category && <p className="error">{errors.category}</p>}
-          </div>
-
-          <div className="field">
-            <label htmlFor="caption">Caption (optional)</label>
-            <textarea
-              id="caption"
-              name="caption"
-              rows="2"
-              ref={captionRef}
-              value={values.caption}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.caption)}
-            />
-            <p className="hint">{values.caption.trim().length}/150 characters</p>
-            {errors.caption && <p className="error">{errors.caption}</p>}
           </div>
         </div>
 
@@ -269,23 +245,6 @@ function PostCardForm({ categories, onAddCard }) {
           Post only your own work. Preview mode: your card is shown on this device only.
         </p>
       </form>
-
-      {askNoCaption && (
-        <ConfirmPopup
-          title="Post without a caption?"
-          message="Are you sure you don't want a caption? A few words can help people connect with your art, but it's totally fine to skip."
-          confirmLabel="Yes, post it"
-          cancelLabel="No, add a caption"
-          onConfirm={() => {
-            setAskNoCaption(false);
-            publish();
-          }}
-          onCancel={() => {
-            setAskNoCaption(false);
-            captionRef.current.focus();
-          }}
-        />
-      )}
     </section>
   );
 }

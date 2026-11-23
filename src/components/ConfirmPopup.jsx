@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 // ============================================================
 // VIDEO PART 6 - REACT: a reusable pop-up component.
-// It is used for "post without a caption?" and "delete this card?".
+// It is used for "delete this card?".
 // ============================================================
 //
 // ConfirmPopup = a small yes/no pop-up.

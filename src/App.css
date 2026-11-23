@@ -40,6 +40,7 @@
   --muted: #5f6a80;
   --accent: #2d4f8f;
   --accent-text: #ffffff;
+  --tag: #6d28d9;
   --brand-color: #b8860b;
   --danger: #b3261e;
   --border: #e2d9cc;
@@ -66,6 +67,7 @@
   --muted: #a8b3ca;
   --accent: #ffd166;
   --accent-text: #141b2e;
+  --tag: #c4b5fd;
   --brand-color: #ffd166;
   --danger: #ffb4ab;
   --border: #27334d;
@@ -469,8 +471,9 @@ textarea:focus-visible {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--accent);
-  border: 1px solid var(--accent);
+  color: var(--tag);
+  background: color-mix(in srgb, var(--tag) 14%, transparent);
+  border: 1px solid var(--tag);
   border-radius: 999px;
   padding: 0.1rem 0.6rem;
   white-space: nowrap;
@@ -768,46 +771,6 @@ hr {
   border-left: 4px solid var(--accent);
   border-radius: 0 10px 10px 0;
   overflow-x: auto;
-}
-
-.stats-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.stats-table caption {
-  caption-side: bottom;
-  padding-top: var(--space-1);
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
-.stats-table th,
-.stats-table td {
-  padding: 0.7rem 1rem;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-}
-
-.stats-table thead th {
-  background: var(--accent);
-  color: var(--accent-text);
-}
-
-.stats-table thead tr:first-child th {
-  text-align: center;
-  font-family: var(--font-display);
-}
-
-.stats-table tfoot th,
-.stats-table tfoot td {
-  font-weight: 700;
-  background: var(--bg);
-  border-top: 2px solid var(--border);
 }
 
 .site-footer {
@@ -1132,13 +1095,6 @@ hr {
   color: var(--muted);
 }
 
-.viewer-caption {
-  margin: 0 0 1.2rem;
-  font-size: 0.95rem;
-  line-height: 1.55;
-  white-space: pre-wrap;
-}
-
 .viewer-side .social-block { margin-bottom: 1.4rem; }
 
 .viewer-actions {
@@ -1239,87 +1195,61 @@ hr {
 /* ============================================================
    VIDEO PART 7 - TESTING AND PROBLEM-SOLVING
    ------------------------------------------------------------
-   PROBLEM I FOUND:
-   On a phone, the two-column layouts were too narrow, and the
-   wide file input pushed the page sideways.
+   STEP 1 - SEE THE PROBLEM
+   Open the site, press F12, turn on the device toolbar, and pick
+   375px (a phone). The phone layout is ugly: the menu is a tall
+   stack, two cards are squeezed into one row, the title is huge,
+   and the page scrolls sideways.
 
-   HOW I TESTED:
-   I opened DevTools (F12), turned on the device toolbar, and
-   tried widths 375px (phone), 768px (tablet) and 1200px (desktop).
-   At 375px the page scrolls sideways.
-
-   THE FIX I WILL TYPE IN THE VIDEO:
-   1. In .app-shell, add:          overflow-x: clip;
-   2. In input[type='file'], add:  max-width: 100%;
-   3. Add this rule:               .about-grid > * { min-width: 0; }
-   4. Change the three 0px values below to 900px, 800px and 560px.
-
-   The 0px values are on purpose. They switch the phone layout off,
-   so the problem is visible before the fix.
-
-   WHAT TO SHOW:
-   Drag the browser window narrower while the gallery is open.
-   Point at the sideways scroll bar, then at the layout stacking
-   at 900px, 800px and 560px after the fix.
+   STEP 2 TO 7 - FIX ONE PROBLEM AT A TIME
+   Each rule below says what is wrong and what to change. Change
+   the value, save, and look at the phone again.
    ============================================================ */
+@media (max-width: 600px) {
+  /* STEP 2 - THE PAGE SCROLLS SIDEWAYS.
+     Something is wider than the screen. clip hides the extra
+     width, so the page cannot move left and right.
+     Change visible to clip. */
+  .app-shell { overflow-x: visible; }
 
-/* PART 7.1 - Below 900px: stack the viewer (art on top, details below).
-   For the video: change 0px to 900px. */
-@media (max-width: 0px) {
-
-  .viewer {
-    display: block;
-    overflow-y: auto;
-    background: var(--viewer-veil);
-    backdrop-filter: blur(4px) saturate(1.15);
-  }
-
-  .viewer-media { height: 62vh; }
-
-  .viewer-slide { padding: 2.8rem 3.2rem 3.4rem; }
-
-  .viewer-side {
-    overflow: visible;
-    border-left: 0;
-    border-top: 1px solid var(--border);
-  }
-
-  .viewer-zoom-hint { display: none; }
-}
-
-/* PART 7.2 - Below 800px: the About section and the form become one column.
-   For the video: change 0px to 800px. */
-@media (max-width: 0px) {
-  .about-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .about-grid { gap: var(--space-3); }
-
-  .form-grid { grid-template-columns: 1fr; }
-}
-
-/* PART 7.3 - Below 560px: phone layout. Smaller padding, stacked filter bar.
-   For the video: change 0px to 560px. */
-@media (max-width: 0px) {
+  /* STEP 3 - THE MENU IS A TALL STACK.
+     row puts the logo, the links and the theme button in one line.
+     A small gap and small padding keep the bar short.
+     Change column to row, 1.6rem to 0.5rem, 2.5rem 0.5rem to
+     0.5rem 1rem. */
   .navbar {
-    justify-content: center;
-    padding: var(--space-1) var(--space-2);
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 2.5rem 1rem;
   }
 
-  .nav-links { gap: var(--space-2); }
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 
-  .hero,
-  .section { padding: var(--space-3) var(--space-2); }
-  .hero-stats { gap: var(--space-3); }
+  .hero h1 {
+    font-size: 2rem;
+    line-height: 1.15;
+  }
 
-  .filter-bar { flex-direction: column; align-items: stretch; }
-  .search-wrap { width: 100%; }
-  .card-grid { gap: var(--space-2); }
-  .viewer-media { height: 56vh; }
-  .viewer-slide { padding: 2.6rem 2.2rem 3rem; }
-  .viewer-side { padding: 1.2rem 1rem; }
-  .viewer-share { margin-left: 0; }
+ 
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  /* STEP 7 - THE ABOUT SECTION AND THE FORM ARE STILL TWO COLUMNS.
+     One column is easier to read on a phone.
+     Change 1fr 1fr to 1fr. */
+  .about-grid,
+  .form-grid { grid-template-columns: 1fr; }
+
+  /* The card viewer already stacks, so nothing to fix here. */
+  .viewer { display: block; overflow-y: auto; }
+  .viewer-media { height: 58vh; }
+  .viewer-side { border-left: 0; border-top: 1px solid var(--border); }
 }
 
 @media (prefers-reduced-motion: reduce) {

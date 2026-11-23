@@ -37,7 +37,6 @@ export const startingCards = [
     title: 'Keiffer - Selected Works',
     author: ARTIST_NAME,
     category: 'Digital',
-    caption: '',
     socials: [
       'https://www.youtube.com/@KeiiAnimation',
       'https://www.tiktok.com/@k3ffer?is_from_webapp=1&sender_device=pc',

@@ -10,7 +10,7 @@ export const MAX_LINKS = 5;
 //
 // Used by PostCardForm AND EditCardPopup, so the rules live in one place.
 // Returns an object of error messages. An empty object means everything is valid.
-// The caption is optional, but at least one social link is REQUIRED.
+// The first social link is required.
 
 export function validateCardFields(values, links) {
   const errors = {};
@@ -24,9 +24,6 @@ export function validateCardFields(values, links) {
   }
   if (values.category === '') {
     errors.category = 'Choose a category.';
-  }
-  if (values.caption.trim().length > 150) {
-    errors.caption = 'Keep the caption under 150 characters.';
   }
 
   // PART 5 - LOOP: the first link is required, the others are optional.

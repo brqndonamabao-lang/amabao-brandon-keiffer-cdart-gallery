@@ -10,7 +10,7 @@ import { getPlatformName } from '../utils/links';
 //
 // ArtworkViewer = the full-screen view of ONE card.
 // LEFT:  the artwork (scroll sideways, click an image to zoom).
-// RIGHT: title, artist, caption, follow links, heart, copy link.
+// RIGHT: title, artist, follow links, heart, copy link.
 //
 // PROPS: card, onLike, onReport, onEdit, onClose
 //
@@ -23,7 +23,7 @@ import { getPlatformName } from '../utils/links';
 // that shows one follow button per social link.
 
 function ArtworkViewer({ card, onLike, onReport, onEdit, onClose }) {
-  const { id, title, author, category, caption, socials, works, likes, liked, isMine } = card;
+  const { id, title, author, category, socials, works, likes, liked, isMine } = card;
   const stageRef = useRef(null);
   const wheelLock = useRef(0);
   const copiedTimer = useRef(null);
@@ -186,8 +186,6 @@ function ArtworkViewer({ card, onLike, onReport, onEdit, onClose }) {
             {works.length} {works.length === 1 ? 'work' : 'works'}
           </span>
         </div>
-
-        {caption && <p className="viewer-caption">{caption}</p>}
 
         <FollowLinks urls={socials} artist={author} />
 

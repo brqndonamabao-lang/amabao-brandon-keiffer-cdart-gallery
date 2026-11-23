@@ -19,7 +19,6 @@ function EditCardPopup({ card, categories, onSave, onDelete, onCancel }) {
     title: card.title,
     author: card.author,
     category: card.category,
-    caption: card.caption,
   });
   const [links, setLinks] = useState(card.socials.length > 0 ? card.socials : ['']);
   const [errors, setErrors] = useState({});
@@ -54,7 +53,6 @@ function EditCardPopup({ card, categories, onSave, onDelete, onCancel }) {
       title: values.title.trim(),
       author: values.author.trim(),
       category: values.category,
-      caption: values.caption.trim(),
       socials: cleanLinks(links),
     });
   };
@@ -105,19 +103,6 @@ function EditCardPopup({ card, categories, onSave, onDelete, onCancel }) {
               <option key={name} value={name}>{name}</option>
             ))}
           </select>
-        </div>
-
-        <div className="field">
-          <label htmlFor="edit-caption">Caption (optional)</label>
-          <textarea
-            id="edit-caption"
-            name="caption"
-            rows="2"
-            value={values.caption}
-            onChange={handleChange}
-            aria-invalid={Boolean(errors.caption)}
-          />
-          {errors.caption && <p className="error">{errors.caption}</p>}
         </div>
 
         <SocialLinksFields

@@ -59,7 +59,6 @@ const CURRENT_YEAR = new Date().getFullYear();
 function prepareCard(card) {
   return {
     ...card,
-    caption: card.caption || '',
     socials: card.socials || [],
     reports: [],
     reportedByMe: false,
@@ -206,7 +205,6 @@ function App() {
     const matchesSearch =
       query === '' ||
       card.title.toLowerCase().includes(query) ||
-      card.caption.toLowerCase().includes(query) ||
       card.author.toLowerCase().includes(query) ||
       card.socials.join(' ').toLowerCase().includes(query);
     return matchesCategory && matchesSearch;
@@ -316,7 +314,7 @@ function App() {
           <PostCardForm categories={CATEGORIES} onAddCard={addCard} />
         )}
 
-        <AboutGallery cards={cards} categories={CATEGORIES} />
+        <AboutGallery />
       </main>
 
       <footer className="site-footer">

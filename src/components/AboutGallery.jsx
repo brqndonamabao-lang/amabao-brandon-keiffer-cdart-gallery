@@ -1,29 +1,18 @@
 // ============================================================
-// VIDEO PART 3 - STRUCTURE: headings, paragraphs, lists, a table.
-// VIDEO PART 5 - JAVASCRIPT: .map(), .filter() and .reduce().
+// VIDEO PART 3 - STRUCTURE: headings, paragraphs, lists, a poem.
 // VIDEO PART 8 - WALKTHROUGH: scroll to the About section.
 // ============================================================
 //
-// AboutGallery = explains the gallery and shows live numbers.
-// It uses a table, a numbered list, a nested list, and a <pre> poem.
-//
-// PROPS: cards, categories
+// AboutGallery = explains the gallery and its rules.
+// It uses a numbered list, a nested list, and a <pre> poem.
 //
 // PART 3 - HTML ELEMENTS USED HERE:
 // <h2> and <h3> are headings. <ol> is a numbered list (the steps).
 // <ul> is a bullet list (the rules), and a <ul> can sit inside a
-// <ul> for extra detail. <table> is for real rows and columns of
-// data. <pre> keeps line breaks and spacing exactly as typed, which
-// is why the poem looks like a poem.
+// <ul> for extra detail. <pre> keeps line breaks and spacing
+// exactly as typed, which is why the poem looks like a poem.
 
-function AboutGallery({ cards, categories }) {
-  // PART 5 - LOOP: for every category, count the cards and add up hearts.
-  const rows = categories.map((name) => {
-    const inCategory = cards.filter((card) => card.category === name);
-    const hearts = inCategory.reduce((sum, card) => sum + card.likes, 0);
-    return { name, count: inCategory.length, hearts };
-  });
-
+function AboutGallery() {
   return (
     <section className="section about" id="about" aria-labelledby="about-title">
       <p className="eyebrow">About this place</p>
@@ -39,19 +28,24 @@ function AboutGallery({ cards, categories }) {
             {' which means a small stack of work in one place.'}
           </p>
 
-          <hr />
+          <pre className="poem">{`Brush, pixel, pencil, paper,
+every drawing is a letter
+sent to someone.`}</pre>
+        </div>
 
+        <div>
           <h3>How to use the gallery</h3>
 
           <ol className="steps">
             <li>Wander the wall</li>
-            <li>Leave a heart</li>
-            <li>Add your own card and links &mdash; let the wall do the introducing</li>
+            <li>Leave a heart and follow the artist&rsquo;s socials</li>
+            <li>Post your own card and links</li>
           </ol>
 
           <h3>Community rules</h3>
 
           <ul>
+            <li>Only artists can post here, not fan pages or repost accounts</li>
             <li>Post only your own work</li>
             <li>
               Social links are required
@@ -62,37 +56,6 @@ function AboutGallery({ cards, categories }) {
             </li>
             <li>Use Report for copied, violent or nude cards</li>
           </ul>
-
-
-          <pre className="poem">{`Brush, pixel, pencil, paper,
-every drawing is a letter
-sent to someone.`}</pre>
-        </div>
-
-        <div>
-
-          <table className="stats-table">
-            <caption>Gallery at a glance (updates live)</caption>
-            <thead>
-              <tr>
-                <th colSpan="3" scope="colgroup">Cards by category</th>
-              </tr>
-              <tr>
-                <th scope="col">Category</th>
-                <th scope="col">Cards</th>
-                <th scope="col">Hearts</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr key={row.name}>
-                  <th scope="row">{row.name}</th>
-                  <td>{row.count}</td>
-                  <td>{row.hearts}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </div>
     </section>
