@@ -1,11 +1,11 @@
-import { BrandName } from './TopBar';
+import { BrandName } from './NavBar';
 
 // ============================================================
 // VIDEO PART 3 - STRUCTURE: the first big section of the page.
 // VIDEO PART 8 - WALKTHROUGH: this is the first thing a visitor sees.
 // ============================================================
 //
-// IntroSection = the welcome area.
+// HeroSection = the welcome area.
 // It explains the site in a few lines and gives two buttons.
 //
 // PROPS: galleryName, cardCount, workCount, totalLikes, onSurprise
@@ -15,7 +15,7 @@ import { BrandName } from './TopBar';
 // <a> jumps to another part of the page. <button> runs a function.
 // <dl> is a description list: a word (dt) and its value (dd).
 
-function IntroSection({ galleryName, cardCount, workCount, totalLikes, onSurprise }) {
+function HeroSection({ galleryName, cardCount, workCount, totalLikes, onSurprise }) {
   return (
     <section className="hero" id="top">
       <p className="eyebrow">A card gallery for artists</p>
@@ -59,4 +59,4 @@ function IntroSection({ galleryName, cardCount, workCount, totalLikes, onSurpris
   );
 }
 
-export default IntroSection;
+export default HeroSection;

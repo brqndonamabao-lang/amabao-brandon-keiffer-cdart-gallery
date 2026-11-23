@@ -27,7 +27,7 @@ function checkFile(file) {
 // VIDEO PART 7 - TESTING: try an empty title, a bad link, a big file.
 // ============================================================
 //
-// PostCardForm = lets an artist post their ONE card with 1 to 5 works.
+// PostForm = lets an artist post their ONE card with 1 to 5 works.
 // Social links are required.
 //
 // PROPS: categories, onAddCard
@@ -40,7 +40,7 @@ function checkFile(file) {
 // links. `checkFile` checks each picture or video. The helper
 // `SocialLinksFields` is shared with EditCardPopup.
 
-function PostCardForm({ categories, onAddCard }) {
+function PostForm({ categories, onAddCard }) {
   // PART 6 - STATE: every value the form needs to remember.
   const [values, setValues] = useState(emptyForm);
   const [links, setLinks] = useState(['']);
@@ -301,4 +301,4 @@ export function SocialLinksFields({ links, errors, idPrefix, onChange, onAdd, on
   );
 }
 
-export default PostCardForm;
+export default PostForm;

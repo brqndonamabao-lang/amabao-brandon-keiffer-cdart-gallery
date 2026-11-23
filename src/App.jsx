@@ -1,23 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
-import TopBar from './components/TopBar';
-import IntroSection from './components/IntroSection';
-import SearchAndFilter from './components/SearchAndFilter';
-import ArtworkCard from './components/ArtworkCard';
+import NavBar from './components/NavBar';
+import HeroSection from './components/HeroSection';
+import FilterBar from './components/FilterBar';
+import GalleryCard from './components/GalleryCard';
 import ArtworkViewer from './components/ArtworkViewer';
-import PostCardForm from './components/PostCardForm';
+import PostForm from './components/PostForm';
 import EditCardPopup from './components/EditCardPopup';
 import ReportPopup from './components/ReportPopup';
-import AboutGallery from './components/AboutGallery';
+import AboutSection from './components/AboutSection';
+import Footer from './components/Footer';
 import { GALLERY_NAME, CATEGORIES, startingCards } from './data/artworks';
-
-const CURRENT_YEAR = new Date().getFullYear();
 
 /* ============================================================
    VIDEO PART 3 - DEVELOPMENT SETUP AND STRUCTURE
    TOPIC 3 OF 4: src/App.jsx (the brain of the page)
    ------------------------------------------------------------
    This is the main React file. It does three jobs:
-   1. It imports the small pieces (TopBar, IntroSection, etc.).
+   1. It imports the small pieces (NavBar, HeroSection, etc.).
    2. It keeps the shared data (cards, theme, search).
    3. It puts the pieces in order on the screen.
 
@@ -39,7 +38,7 @@ const CURRENT_YEAR = new Date().getFullYear();
    is not a React-only keyword; it is normal JavaScript.
 
    The order inside the return is the order on the page:
-   TopBar -> IntroSection -> Gallery -> Post form -> About ->
+   NavBar -> HeroSection -> Gallery -> Post form -> About ->
    Footer. The pop-ups at the bottom appear only when their state
    says they should.
 
@@ -119,7 +118,7 @@ function App() {
 
   useEffect(() => {
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1224' : '#f6f1ea');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1224' : '#f2ece2');
   }, [theme]);
 
   /* ==========================================================
@@ -227,7 +226,7 @@ function App() {
      ----------------------------------------------------------
      This is the `return` explained in Part 3. Everything inside it
      is what the visitor sees. Read it from top to bottom:
-     TopBar -> IntroSection -> Gallery -> Post form -> About ->
+     NavBar -> HeroSection -> Gallery -> Post form -> About ->
      Footer. Then show the pop-ups at the bottom: the viewer, the
      edit pop-up, and the report pop-up.
      ========================================================== */
@@ -235,10 +234,10 @@ function App() {
     <div className="app-shell" data-theme={theme}>
       <a className="skip-link" href="#gallery">Skip to the gallery</a>
 
-      <TopBar galleryName={GALLERY_NAME} theme={theme} onToggleTheme={toggleTheme} />
+      <NavBar galleryName={GALLERY_NAME} theme={theme} onToggleTheme={toggleTheme} />
 
       <main>
-        <IntroSection
+        <HeroSection
           galleryName={GALLERY_NAME}
           cardCount={cards.length}
           workCount={totalWorks}
@@ -254,7 +253,7 @@ function App() {
              leave a heart on the ones you like, and follow the links to see more.
           </p>
 
-          <SearchAndFilter
+          <FilterBar
             categories={CATEGORIES}
             activeCategory={activeCategory}
             onCategoryChange={setActiveCategory}
@@ -266,7 +265,7 @@ function App() {
           {visibleCards.length > 0 ? (
             <div className="card-grid">
               {visibleCards.map((card) => (
-                <ArtworkCard
+                <GalleryCard
                   key={card.id}
                   card={card}
                   onOpen={setOpenCardId}
@@ -311,34 +310,13 @@ function App() {
             </p>
           </section>
         ) : (
-          <PostCardForm categories={CATEGORIES} onAddCard={addCard} />
+          <PostForm categories={CATEGORIES} onAddCard={addCard} />
         )}
 
-        <AboutGallery />
+        <AboutSection />
       </main>
 
-      <footer className="site-footer">
-        <p>
-          &copy; {CURRENT_YEAR} {GALLERY_NAME}. Every artwork belongs to its artist. Please
-          don&rsquo;t copy or repost without permission.
-          <br />
-          Background: a painted reproduction of <i>The Starry Night</i> by Vincent van Gogh (1889, public domain).
-          <br />
-          Want to see more art? Visit these free collections:
-        </p>
-        <ul className="footer-links">
-          <li>
-            <a href="https://www.metmuseum.org/art/collection" target="_blank" rel="noopener noreferrer">
-              The Met Collection
-            </a>
-          </li>
-          <li>
-            <a href="https://artsandculture.google.com/" target="_blank" rel="noopener noreferrer">
-              Google Arts &amp; Culture
-            </a>
-          </li>
-        </ul>
-      </footer>
+      <Footer galleryName={GALLERY_NAME} />
 
       {openCard && (
         <ArtworkViewer

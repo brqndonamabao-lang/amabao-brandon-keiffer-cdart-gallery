@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { cleanLinks } from '../utils/links';
 import { MAX_LINKS, validateCardFields } from '../utils/validation';
-import { SocialLinksFields } from './PostCardForm';
+import { SocialLinksFields } from './PostForm';
 import ConfirmPopup from './ConfirmPopup';
 
 // ============================================================

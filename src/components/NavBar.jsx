@@ -3,7 +3,7 @@
 // VIDEO PART 6 - REACT: this piece receives props and shows them.
 // ============================================================
 //
-// TopBar = the strip at the very top of the page.
+// NavBar = the strip at the very top of the page.
 // It holds the logo, the three section links, and the theme button.
 //
 // PROPS are values that App.jsx gives to this component:
@@ -15,7 +15,11 @@
 // <header> is the top strip. <nav> marks the main menu. <a> links
 // to a section on the page. <button> runs a function.
 
-function TopBar({ galleryName, theme, onToggleTheme }) {
+// PART 6 - STATE: the two icon pictures the theme button can show.
+import themeSun from '../images/theme-sun.svg';
+import themeMoon from '../images/theme-moon.svg';
+
+function NavBar({ galleryName, theme, onToggleTheme }) {
   const isDark = theme === 'dark';
 
   return (
@@ -35,14 +39,16 @@ function TopBar({ galleryName, theme, onToggleTheme }) {
       </nav>
 
       {/* PART 6 - STATE: clicking this button changes App's theme state,
-          and React redraws the page with the new colours. */}
+          and React redraws the page with the new colours.
+          The icon shows the mode you will switch TO: a sun means
+          "go light", a moon means "go dark". */}
       <button
         type="button"
         className="theme-btn"
         onClick={onToggleTheme}
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       >
-        {isDark ? '☀ Light' : '☾ Dark'}
+        <img className="theme-icon" src={isDark ? themeSun : themeMoon} alt="" />
       </button>
     </header>
   );
@@ -66,4 +72,4 @@ export function BrandName({ name }) {
   );
 }
 
-export default TopBar;
+export default NavBar;

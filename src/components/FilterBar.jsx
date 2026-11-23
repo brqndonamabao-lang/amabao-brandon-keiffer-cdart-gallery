@@ -17,7 +17,7 @@
 // for screen readers. `aria-live="polite"` makes the result count
 // announced when it changes.
 
-function SearchAndFilter({
+function FilterBar({
   categories,
   activeCategory,
   onCategoryChange,
@@ -62,4 +62,4 @@ function SearchAndFilter({
   );
 }
 
-export default SearchAndFilter;
+export default FilterBar;

@@ -3,7 +3,7 @@
 // VIDEO PART 6 - REACT: App draws this once per card with .map().
 // ============================================================
 //
-// ArtworkCard = the WHOLE card (picture + title + heart + report).
+// GalleryCard = the WHOLE card (picture + title + heart + report).
 // It is not just the title. The title is the <h3> inside it.
 //
 // PROPS:
@@ -17,7 +17,7 @@
 // used for anything clickable. The cover is a button because
 // clicking it opens the viewer.
 
-function ArtworkCard({ card, onOpen, onLike, onReport }) {
+function GalleryCard({ card, onOpen, onLike, onReport }) {
   const { id, title, author, works, likes, liked, isMine } = card;
 
   if (card.reportedByMe) {
@@ -97,4 +97,4 @@ export function WorkMedia({ work, alt, controls = true }) {
   return <img src={work.url} alt={alt} loading="lazy" draggable="false" />;
 }
 
-export default ArtworkCard;
+export default GalleryCard;
