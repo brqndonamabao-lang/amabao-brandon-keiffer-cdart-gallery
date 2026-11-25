@@ -40,9 +40,9 @@ Visitors scroll cards, open one, swipe through works, leave a heart, and follow 
 - Post form with validation, 1 to 5 works (pictures or videos), previews, and removable files
 - Edit my card (works while the page is open)
 - Report button (reported cards are hidden from your gallery); light/dark theme toggle
-- Categories: Digital, Traditional, Photography, Animation, Video
+- Categories: Digital Art, Traditional, Animation
 - Slowly moving "Night" background (CSS animation, `public/bg/night.jpg`)
-- Live numbers in the About section, nested lists, `<pre>` poem, scroll-progress bar
+- Nested lists, `<pre>` poem, scroll-progress bar
 
 ---
 

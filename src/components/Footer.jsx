@@ -9,6 +9,10 @@
 // PART 3 - HTML ELEMENTS USED HERE:
 // <footer> marks the bottom of the page. <ul> and <li> make a
 // list. <a> opens another website.
+//
+// PART 5 - `new Date().getFullYear()` asks the browser for the
+// current year, so the copyright stays correct without editing
+// the text every January.
 
 const CURRENT_YEAR = new Date().getFullYear();
 

@@ -8,14 +8,18 @@ export const MAX_LINKS = 5;
 // a bad link, a 6 MB picture, and 6 links.
 // ============================================================
 //
-// Used by PostCardForm AND EditCardPopup, so the rules live in one place.
-// Returns an object of error messages. An empty object means everything is valid.
-// The first social link is required.
+// Used by PostArtwork AND EditCardPopup, so the rules live in one
+// place instead of being copied into two forms.
+//
+// It returns an object of error messages. An "object" is a box of
+// named values, like { title: "a message" }. An empty object {}
+// means everything is valid. The first social link is required.
 
 export function validateCardFields(values, links) {
   const errors = {};
 
-  // PART 5 - IF: each rule adds one message to the errors object.
+  // PART 5 - IF: each rule asks a question. If the answer is
+  // "yes, something is wrong", add one message to the errors box.
   if (values.title.trim().length < 3) {
     errors.title = 'Give your card a title (at least 3 characters).';
   }
@@ -26,7 +30,9 @@ export function validateCardFields(values, links) {
     errors.category = 'Choose a category.';
   }
 
-  // PART 5 - LOOP: the first link is required, the others are optional.
+  // PART 5 - LOOP: go over every link. The first one is required,
+  // the others are optional but must be valid if filled in.
+  // `forEach` runs the same steps once per item.
   const linkErrors = {};
   links.forEach((text, index) => {
     if (index === 0 && text.trim() === '') {

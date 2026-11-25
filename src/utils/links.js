@@ -2,21 +2,24 @@
 // VIDEO PART 5 - JAVASCRIPT INTERACTIONS
 // ------------------------------------------------------------
 // This file shows the JavaScript basics in a real job:
-//   - variables and functions
-//   - if / else
-//   - try / catch (for errors)
-//   - arrays: map, filter
-//   - a loop over an object
+//   - variables (names that hold a value)
+//   - functions (small machines: input goes in, result comes out)
+//   - if / else (ask a question, pick one path)
+//   - try / catch (try something risky; catch the error if it fails)
+//   - arrays: map and filter (change or keep items in a list)
+//   - a loop (repeat the same step for each item)
 //
 // It cleans up the social media links that visitors type.
 //
-// PART 5 - The PLATFORMS object below maps a web address to a
-// friendly name, so "https://www.instagram.com/name" becomes
-// "Instagram" on the card.
+// PART 5 - The PLATFORMS object below is a list of pairs. Each
+// pair is "this web address" -> "this friendly name". So a link
+// with instagram.com shows the word "Instagram" on the card.
 // ============================================================
 
 // PART 5 - FUNCTION: add "https://" if the visitor typed just
-// "instagram.com/name". A function takes input and returns output.
+// "instagram.com/name". `trim()` removes spaces at the ends. The
+// test asks: "does it already start with http:// or https://?"
+// The `i` means ignore upper or lower case.
 export function normalizeLink(text) {
   const trimmed = text.trim();
   if (trimmed === '') return '';
@@ -24,8 +27,8 @@ export function normalizeLink(text) {
 }
 
 // PART 5 - TRY / CATCH: new URL() throws an error when the text
-// is not a real web address. catch keeps the page from crashing.
-// Returns true when the text is a usable http(s) web address.
+// is not a real web address. `catch` keeps the page from crashing.
+// Returns true when the text is a usable web address.
 export function isValidLink(link) {
   try {
     const url = new URL(link);
@@ -36,8 +39,9 @@ export function isValidLink(link) {
   }
 }
 
-// PART 5 - ARRAY METHODS: map changes every item, filter removes
-// empty and duplicate links.
+// PART 5 - ARRAY METHODS: map changes every item; filter keeps
+// only the items that pass a test. Here we remove empty links and
+// duplicates.
 export function cleanLinks(links) {
   return links
     .map(normalizeLink)
@@ -69,7 +73,8 @@ const PLATFORMS = {
 };
 
 // PART 5 - LOOP: "https://www.instagram.com/keiffer" -> "Instagram".
-// Unknown sites show their address instead.
+// The loop goes over each pair in the object. An unknown site
+// shows its address instead.
 export function getPlatformName(link) {
   try {
     const host = new URL(link).hostname.replace(/^www\./, '');

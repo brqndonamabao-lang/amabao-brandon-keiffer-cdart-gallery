@@ -3,16 +3,20 @@
 // VIDEO PART 8 - WALKTHROUGH: scroll to the About section.
 // ============================================================
 //
-// AboutSection = explains the gallery and its rules.
+// About = explains the gallery and its rules.
 // It uses a numbered list, a nested list, and a <pre> poem.
 //
+// "Semantic HTML" means a tag that describes its job. <section>
+// says "this is one part of the page". <h2> and <h3> are headings
+// in order, like a book.
+//
 // PART 3 - HTML ELEMENTS USED HERE:
-// <h2> and <h3> are headings. <ol> is a numbered list (the steps).
-// <ul> is a bullet list (the rules), and a <ul> can sit inside a
-// <ul> for extra detail. <pre> keeps line breaks and spacing
+// <ol> is a numbered list (the steps). <ul> is a bullet list
+// (the rules), and a <ul> can sit inside a <ul> for extra detail.
+// That is called a nested list. <pre> keeps line breaks and spaces
 // exactly as typed, which is why the poem looks like a poem.
 
-function AboutSection() {
+function About() {
   return (
     <section className="section about" id="about" aria-labelledby="about-title">
       <p className="eyebrow">About this place</p>
@@ -62,4 +66,4 @@ sent to someone.`}</pre>
   );
 }
 
-export default AboutSection;
+export default About;

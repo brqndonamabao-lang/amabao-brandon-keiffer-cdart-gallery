@@ -3,21 +3,25 @@
 // VIDEO PART 6 - REACT: App draws this once per card with .map().
 // ============================================================
 //
-// GalleryCard = the WHOLE card (picture + title + heart + report).
+// ArtworkCard = the WHOLE card (picture + title + heart + report).
 // It is not just the title. The title is the <h3> inside it.
 //
 // PROPS:
 //   card     -> one object from the cards array in App.jsx
-//   onOpen   -> function to open the big viewer
+//   onOpen   -> function to open the detail view
 //   onLike   -> function to add or remove a heart
 //   onReport -> function to open the report pop-up
 //
 // PART 3 - HTML ELEMENTS USED HERE:
 // <article> is one complete card. <h3> is the title. <button> is
 // used for anything clickable. The cover is a button because
-// clicking it opens the viewer.
+// clicking it opens the detail view.
+//
+// PART 3 - ACCESSIBILITY: `aria-label` is the name a screen
+// reader reads out loud. `aria-pressed` says whether the heart is
+// on or off, like a light switch.
 
-function GalleryCard({ card, onOpen, onLike, onReport }) {
+function ArtworkCard({ card, onOpen, onLike, onReport }) {
   const { id, title, author, works, likes, liked, isMine } = card;
 
   if (card.reportedByMe) {
@@ -78,8 +82,20 @@ function GalleryCard({ card, onOpen, onLike, onReport }) {
 /* PART 6 - WORKMEDIA HELPER
    ------------------------------------------------------------
    This small helper shows ONE work as an <img> or a <video>.
-   ArtworkViewer imports it too, so the "picture or video?" choice
-   lives in one place instead of being repeated in two files. */
+   ArtworkDetails imports it too, so the "picture or video?"
+   choice lives in one place instead of being repeated in two
+   files.
+
+   PART 5 - A FEW VIDEO SETTINGS, IN PLAIN WORDS:
+   `preload="metadata"` tells the browser to load only the small
+   information about the video (its length and a first frame),
+   not the whole file. That keeps the page light until the visitor
+   presses play. "Metadata" just means data about the file.
+   `muted` starts the video with no sound.
+   `playsInline` keeps the video inside the page on a phone,
+   instead of opening a full-screen player.
+   `alt` is the text a screen reader reads out loud when the
+   picture cannot be seen. */
 export function WorkMedia({ work, alt, controls = true }) {
   if (work.type === 'video') {
     return (
@@ -97,4 +113,4 @@ export function WorkMedia({ work, alt, controls = true }) {
   return <img src={work.url} alt={alt} loading="lazy" draggable="false" />;
 }
 
-export default GalleryCard;
+export default ArtworkCard;

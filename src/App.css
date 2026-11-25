@@ -8,6 +8,10 @@
    "HTML and React build the rooms. CSS is the paint. It decides
    the colours, the spacing, and where things sit on the screen."
 
+   "Responsive" means the page changes to fit the screen, from a
+   small phone to a big monitor. A "media query" is a rule that
+   says: "only use this CSS when the screen is smaller than X."
+
    THE THREE CSS METHODS (all three are in this project):
    1. Inline style  -> style="..." in index.html (strongest)
    2. Internal block -> <style> in index.html
@@ -18,8 +22,10 @@
    PART 4.1 - CSS VARIABLES (custom properties)
    ------------------------------------------------------------
    A variable is a name that holds a value. We define it once in
-   :root (the whole page) and reuse it with var(--name).
-   Change one line here and the whole site changes.
+   :root, which means "the whole page", and reuse it with
+   var(--name). Think of it like naming a colour once and using
+   that name everywhere. Change one line here and the whole site
+   changes.
    Palette: the Night painting - deep blue, cream paper, star yellow.
    ============================================================ */
 :root {
@@ -55,10 +61,10 @@
 /* ============================================================
    PART 4.2 - THE DARK THEME
    ------------------------------------------------------------
-   Same variable names, new values. The theme button in TopBar
-   sets data-theme="dark" on .app-shell, so every var() below
-   switches to the dark colours at the same time.
-   This is why one button can re-paint the whole website.
+   Same variable names, new values. The theme button in the
+   Navbar sets data-theme="dark" on .app-shell, so every var()
+   below switches to the dark colours at the same time.
+   That is why one button can re-paint the whole website.
    ============================================================ */
 .app-shell[data-theme='dark'] {
   --bg: #0b1224;
@@ -83,9 +89,10 @@
    PART 4.3 - BASE STYLES (element selectors)
    ------------------------------------------------------------
    These rules target HTML element names: body, h1, p, a, img.
-   They set the defaults for the whole page.
-   box-sizing: border-box means padding is counted INSIDE width,
-   which makes sizing much easier to predict.
+   That is called an element selector. They set the defaults for
+   the whole page.
+   box-sizing: border-box means padding is counted INSIDE the
+   width, so a box is never wider than the number you gave it.
    ============================================================ */
 * {
   box-sizing: border-box;
@@ -96,6 +103,8 @@ html {
   scroll-behavior: auto;
 }
 
+/* PART 4 - Smooth scrolling is nice, but only when the visitor did
+   not ask for less motion. */
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
@@ -108,6 +117,9 @@ body {
   line-height: 1.6;
 }
 
+/* PART 4 - A skip link stays hidden until you press Tab, the key
+   that moves from link to link. It lets a keyboard user jump
+   straight to the gallery without tabbing through the menu. */
 .skip-link {
   position: absolute;
   top: -60px;
@@ -166,11 +178,13 @@ img {
 /* ============================================================
    PART 4.4 - ANIMATION (the moving Night background)
    ------------------------------------------------------------
-   The layer is 150% as wide as the screen, and @keyframes
-   pan-night slides it left and back forever (alternate).
-   A pseudo-element (::before) is used instead of
+   The layer is 150% as wide as the screen. @keyframes is a set of
+   steps for an animation; here it slides the image left and back
+   forever (alternate). A pseudo-element (::before) is a fake
+   extra box that CSS can draw. We use it instead of
    background-attachment: fixed because it also works on phones.
-   z-index: -1 puts it behind the page content.
+   z-index: -1 puts it behind the page content. A bigger z-index
+   sits closer to the viewer.
    ============================================================ */
 .app-shell::before {
   content: '';
@@ -199,6 +213,8 @@ main {
   padding: 0 var(--space-2);
 }
 
+/* PART 4 - This hides text on screen but keeps it for screen
+   readers. We use it for labels that would look repetitive. */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -208,6 +224,9 @@ main {
   white-space: nowrap;
 }
 
+/* PART 4 - The outline shows keyboard users which control is
+   selected. It appears only when the visitor uses Tab, not when
+   they click with a mouse. */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -236,7 +255,7 @@ textarea:focus-visible {
 /* ============================================================
    PART 4.6 - FLEXBOX (the top bar)
    ------------------------------------------------------------
-   display: flex puts children in one row.
+   display: flex puts children in one row. That is called Flexbox.
    justify-content: space-between pushes the logo left and the
    theme button right. align-items: center lines them up.
    flex-wrap: wrap lets them move to a new line on a small screen.
@@ -289,7 +308,8 @@ textarea:focus-visible {
 /* PART 4.2b - THEME BUTTON (icon only)
    ------------------------------------------------------------
    One round button in the navbar. It holds a picture, not text,
-   so screen readers still get the label from aria-label.
+   so screen readers still get the label from aria-label. A screen
+   reader is software that reads the page out loud.
    The icon shows the mode you will switch TO. */
 .theme-btn {
   display: grid;
@@ -388,27 +408,6 @@ textarea:focus-visible {
   justify-content: center;
   flex-wrap: wrap;
   gap: var(--space-2);
-}
-
-.hero-stats {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-4);
-  margin: var(--space-3) 0 0;
-}
-
-.hero-stats dt {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-}
-
-.hero-stats dd {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: bold;
 }
 
 .section {
@@ -817,10 +816,11 @@ hr {
 /* ============================================================
    PART 4.8 - CSS GRID (the card wall)
    ------------------------------------------------------------
-   display: grid makes rows and columns.
+   display: grid makes rows and columns. That is called CSS Grid.
    repeat(auto-fit, minmax(220px, 300px)) means:
      "make as many columns as fit; each one is between 220px
       and 300px wide." It is responsive without extra code.
+      "Responsive" means it adapts to the screen size.
    gap is the space between cards. justify-content: center keeps
    one card in the middle instead of stuck on the left.
 
@@ -954,6 +954,10 @@ hr {
    LEFT  = the artwork, fitted inside its side with a scroll bar.
    RIGHT = a dark panel with the title, artist, links and buttons.
    The X button sits on the left, over the artwork.
+   "Fitted" comes from object-fit: contain, which shows the whole
+   picture and never crops it. The scroll bar moves sideways
+   through the works. scroll-snap makes each work stop neatly at
+   the edge instead of halfway.
    On a phone the dark panel moves to the bottom.
    ============================================================ */
 .viewer {
@@ -999,7 +1003,9 @@ hr {
   scroll-snap-align: start;
 }
 
-/* The art fits inside its side, so the transparent blur shows around it. */
+/* PART 4.9 - The art fits inside its side, so the transparent blur
+   shows around it. object-fit: contain means "show the whole
+   picture, never crop it". */
 .art {
   width: 100%;
   height: 100%;
@@ -1015,7 +1021,7 @@ hr {
 
 .art-image { cursor: zoom-in; }
 
-/* The dark panel on the right. */
+/* PART 4.9 - The dark panel on the right. */
 .viewer-info {
   min-height: 0;
   overflow-y: auto;
@@ -1161,10 +1167,14 @@ hr {
 /* ============================================================
    VIDEO PART 7 - TESTING AND PROBLEM-SOLVING
    ------------------------------------------------------------
+   TESTING means using the site like a real visitor and looking
+   for problems. A "device toolbar" is a button in DevTools that
+   pretends the screen is a phone.
+
    STEP 1 - SEE THE PROBLEM
    Open the site, press F12, turn on the device toolbar, and pick
    375px (a phone). The phone layout is ugly: the menu is a tall
-   stack, two cards are squeezed into one row, the title is huge,
+   stack, the About section and the form are two narrow columns,
    and the page scrolls sideways.
 
    STEP 2 TO 7 - FIX ONE PROBLEM AT A TIME
@@ -1173,15 +1183,16 @@ hr {
    ============================================================ */
 @media (max-width: 600px) {
   /* STEP 2 - THE PAGE SCROLLS SIDEWAYS.
-     Something is wider than the screen. clip hides the extra
-     width, so the page cannot move left and right.
+     Something is wider than the screen. overflow-x controls what
+     happens when content is too wide. clip hides the extra width,
+     so the page cannot move left and right.
      Change visible to clip. */
   .app-shell { overflow-x: visible; }
 
   /* STEP 3 - THE MENU IS A TALL STACK.
-     row puts the logo, the links and the theme button in one line.
-     A small gap and small padding keep the bar short.
-     Change column to row, 1.6rem to 0.5rem, 2.5rem 0.5rem to
+     flex-direction: row puts the logo, links and theme button in
+     one line. A small gap and small padding keep the bar short.
+     Change column to row, 1.2rem to 0.5rem, and 2.5rem 1rem to
      0.5rem 1rem. */
   .navbar {
     flex-direction: column;
@@ -1199,7 +1210,6 @@ hr {
     line-height: 1.15;
   }
 
- 
   .filter-bar {
     flex-direction: column;
     align-items: stretch;
@@ -1207,12 +1217,16 @@ hr {
   }
 
   /* STEP 7 - THE ABOUT SECTION AND THE FORM ARE STILL TWO COLUMNS.
-     One column is easier to read on a phone.
+     grid-template-columns: 1fr 1fr makes two equal columns.
+     One column (1fr) is easier to read on a phone.
      Change 1fr 1fr to 1fr. */
   .about-grid,
   .form-grid { grid-template-columns: 1fr; }
 }
 
+/* PART 4 - If the visitor asked their device to use less motion,
+   stop animations and smooth changes. This is a comfort setting
+   some people turn on in their system settings. */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;

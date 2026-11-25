@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { cleanLinks } from '../utils/links';
 import { MAX_LINKS, validateCardFields } from '../utils/validation';
-import { SocialLinksFields } from './PostForm';
-import ConfirmPopup from './ConfirmPopup';
+import { SocialLinksFields } from './PostArtwork';
 
 // ============================================================
 // VIDEO PART 6 - REACT: useState starts from the card's current text.
@@ -10,7 +9,12 @@ import ConfirmPopup from './ConfirmPopup';
 // ============================================================
 //
 // EditCardPopup = pop-up to change the text and links of your own card.
-// (Works are not changed here.) Changes last only until the page refreshes.
+// (Works are not changed here.) Changes last only until the page
+// refreshes.
+//
+// A pop-up is a small box that sits on top of the page. A
+// "controlled input" means the value on screen comes from React
+// state, so React always knows what is typed.
 //
 // PROPS: card, categories, onSave(changes), onDelete, onCancel
 
@@ -26,6 +30,8 @@ function EditCardPopup({ card, categories, onSave, onDelete, onCancel }) {
 
   // PART 5 - Keyboard: Escape means cancel.
   // While the delete confirmation is open, that pop-up handles Escape instead.
+  // `true` at the end is called the capture phase. It lets this
+  // listener hear the key before the page behind it does.
   useEffect(() => {
     if (confirmingDelete) return undefined;
     const handleKey = (event) => {
@@ -43,6 +49,8 @@ function EditCardPopup({ card, categories, onSave, onDelete, onCancel }) {
     setValues({ ...values, [name]: value });
   };
 
+  // PART 5 - Ask the shared validation rules first. If there are
+  // errors, show them and stop. If there are none, save the card.
   const handleSubmit = (event) => {
     event.preventDefault();
     const foundErrors = validateCardFields(values, links);
@@ -137,6 +145,55 @@ function EditCardPopup({ card, categories, onSave, onDelete, onCancel }) {
           onCancel={() => setConfirmingDelete(false)}
         />
       )}
+    </div>
+  );
+}
+
+/* VIDEO PART 6 - CONFIRMPOPUP HELPER
+   ------------------------------------------------------------
+   A small yes/no pop-up, used here for "delete this card?".
+   It is kept in this file because EditCardPopup is the only
+   place that needs it.
+
+   PROPS: title, message, confirmLabel, cancelLabel, onConfirm,
+   onCancel */
+
+function ConfirmPopup({ title, message, confirmLabel, cancelLabel, onConfirm, onCancel }) {
+  // PART 5 - Keyboard: Escape means the same as choosing "cancel".
+  // The listener uses the "capture" phase and stops the event, so when
+  // this pop-up sits on top of the big picture view, Escape closes ONLY
+  // this pop-up.
+  useEffect(() => {
+    const handleKey = (event) => {
+      if (event.key === 'Escape') {
+        event.stopPropagation();
+        onCancel();
+      }
+    };
+    window.addEventListener('keydown', handleKey, true);
+    return () => window.removeEventListener('keydown', handleKey, true);
+  }, [onCancel]);
+
+  return (
+    <div className="dialog-backdrop" onClick={onCancel}>
+      <div
+        className="dialog-panel"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="confirm-title"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <h3 id="confirm-title">{title}</h3>
+        <p>{message}</p>
+        <div className="dialog-actions">
+          <button type="button" className="btn btn-ghost" onClick={onCancel} autoFocus>
+            {cancelLabel}
+          </button>
+          <button type="button" className="btn btn-primary" onClick={onConfirm}>
+            {confirmLabel}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { WorkMedia } from './GalleryCard';
+import { WorkMedia } from './ArtworkCard';
 import { getPlatformName } from '../utils/links';
 
 // ============================================================
@@ -8,20 +8,22 @@ import { getPlatformName } from '../utils/links';
 // VIDEO PART 8 - WALKTHROUGH: open a card and show this screen.
 // ============================================================
 //
-// ArtworkViewer = one card, full screen, like a TikTok post.
-// The artwork fills the screen. The title, artist, links and
-// buttons sit together in one quiet column.
+// ArtworkDetails = one card, full screen, like a TikTok post.
+// "Details" means the close-up view: the artwork plus the title,
+// artist, links, and buttons.
 //
-// PROPS: card, onLike, onReport, onEdit, onClose
+// PROPS are the values App gives this component: the card to show,
+// plus the functions for a heart, a report, an edit, and closing.
 //
-// PART 6 - THREE PIECES OF MEMORY:
+// PART 6 - THREE PIECES OF MEMORY (state):
 //   index  = which work is showing
 //   zoom   = is the zoom picture open?
 //   copied = show the "Copied!" text for a moment?
 //
 // PART 5 - useRef points at the sliding area so we can scroll it.
+// A "ref" is a handle to a real element on the page.
 
-function ArtworkViewer({ card, onLike, onReport, onEdit, onClose }) {
+function ArtworkDetails({ card, onLike, onReport, onEdit, onClose }) {
   const { id, title, author, socials, works, likes, liked, isMine } = card;
   const stageRef = useRef(null);
 
@@ -32,7 +34,9 @@ function ArtworkViewer({ card, onLike, onReport, onEdit, onClose }) {
   const current = works[index];
   const lastIndex = works.length - 1;
 
-  // PART 5 - Stop the page behind the viewer from scrolling.
+  // PART 5 - Stop the page behind this full-screen view from
+  // scrolling. `overflow = 'hidden'` locks the page. The return
+  // runs when the view closes, so scrolling works again.
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -41,6 +45,8 @@ function ArtworkViewer({ card, onLike, onReport, onEdit, onClose }) {
   }, []);
 
   // PART 5 - Mouse wheel: up/down moves one work at a time.
+  // "Wheel" means the scroll wheel on a mouse.
+  // `preventDefault` stops the page itself from scrolling too.
   // The short pause stops one fast flick from skipping works.
   useEffect(() => {
     const stage = stageRef.current;
@@ -67,8 +73,10 @@ function ArtworkViewer({ card, onLike, onReport, onEdit, onClose }) {
   }, []);
 
   // PART 5 - Keyboard: Escape closes, left and right change work.
+  // `addEventListener` waits for a key press. The return removes
+  // the listener so it does not keep running after the view closes.
   useEffect(() => {
-    // Move to a work. Math keeps the number inside the list.
+    // PART 5 - Move to a work. Math keeps the number inside the list.
     function goTo(number) {
       const next = Math.max(0, Math.min(lastIndex, number));
       setIndex(next);
@@ -90,7 +98,8 @@ function ArtworkViewer({ card, onLike, onReport, onEdit, onClose }) {
     return () => window.removeEventListener('keydown', handleKey);
   }, [index, zoom, onClose, lastIndex]);
 
-  // PART 5 - When the visitor swipes, update the memory to match.
+  // PART 5 - When the visitor swipes or drags the art, update the
+  // memory to match. `scrollLeft` is how far the strip has moved.
   function handleScroll() {
     const stage = stageRef.current;
     if (!stage || stage.clientWidth === 0) return;
@@ -98,6 +107,9 @@ function ArtworkViewer({ card, onLike, onReport, onEdit, onClose }) {
   }
 
   // PART 5 - Copy this card's link, then show "Copied!" for 2 seconds.
+  // The clipboard is the invisible place where "copy" puts text.
+  // `.catch` stops an error from breaking the page if copying is
+  // blocked by the browser.
   function copyLink() {
     const link = `${window.location.origin}${window.location.pathname}#card-${id}`;
     navigator.clipboard.writeText(link).catch(() => {});
@@ -105,6 +117,8 @@ function ArtworkViewer({ card, onLike, onReport, onEdit, onClose }) {
     setTimeout(() => setCopied(false), 2000);
   }
 
+  // PART 3 - role="dialog" tells screen readers this is a pop-up.
+  // aria-modal="true" means the page behind it is not active.
   return (
     <div className="viewer" role="dialog" aria-modal="true" aria-label={`${title} by ${author}`}>
       {/* PART 3 - The artwork. Each work is one full-screen slide. */}
@@ -208,4 +222,4 @@ function FollowLinks({ urls, artist }) {
   );
 }
 
-export default ArtworkViewer;
+export default ArtworkDetails;
