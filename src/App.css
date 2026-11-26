@@ -1,33 +1,3 @@
-/* ============================================================
-   VIDEO PART 4 - STYLING AND LAYOUT
-   ------------------------------------------------------------
-   This one file styles the whole site. Read it top to bottom in
-   the video. The numbered markers below show what to point at.
-
-   WHAT TO SAY FIRST:
-   "HTML and React build the rooms. CSS is the paint. It decides
-   the colours, the spacing, and where things sit on the screen."
-
-   "Responsive" means the page changes to fit the screen, from a
-   small phone to a big monitor. A "media query" is a rule that
-   says: "only use this CSS when the screen is smaller than X."
-
-   THE THREE CSS METHODS (all three are in this project):
-   1. Inline style  -> style="..." in index.html (strongest)
-   2. Internal block -> <style> in index.html
-   3. External file  -> this file (easiest to reuse)
-   ============================================================ */
-
-/* ============================================================
-   PART 4.1 - CSS VARIABLES (custom properties)
-   ------------------------------------------------------------
-   A variable is a name that holds a value. We define it once in
-   :root, which means "the whole page", and reuse it with
-   var(--name). Think of it like naming a colour once and using
-   that name everywhere. Change one line here and the whole site
-   changes.
-   Palette: the Night painting - deep blue, cream paper, star yellow.
-   ============================================================ */
 :root {
   --font-display: Georgia, 'Times New Roman', serif;
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -47,7 +17,7 @@
   --accent: #090526;
   --accent-text: #ffffff;
   --tag: #6d28d9;
-  --brand-color: #ff019e;
+  --brand-color: #ac8100;
   --danger: #b3261e;
   --border: #ded4c6;
   --shadow: 0 6px 20px rgba(28, 38, 70, 0.14);
@@ -58,14 +28,7 @@
   --zoom-veil: rgba(242, 236, 226, 0.97);
 }
 
-/* ============================================================
-   PART 4.2 - THE DARK THEME
-   ------------------------------------------------------------
-   Same variable names, new values. The theme button in the
-   Navbar sets data-theme="dark" on .app-shell, so every var()
-   below switches to the dark colours at the same time.
-   That is why one button can re-paint the whole website.
-   ============================================================ */
+
 .app-shell[data-theme='dark'] {
   --bg: #0b1224;
   --surface: #121a2f;
@@ -85,15 +48,7 @@
   --zoom-veil: rgba(5, 8, 20, 0.96);
 }
 
-/* ============================================================
-   PART 4.3 - BASE STYLES (element selectors)
-   ------------------------------------------------------------
-   These rules target HTML element names: body, h1, p, a, img.
-   That is called an element selector. They set the defaults for
-   the whole page.
-   box-sizing: border-box means padding is counted INSIDE the
-   width, so a box is never wider than the number you gave it.
-   ============================================================ */
+
 * {
   box-sizing: border-box;
 }
@@ -103,8 +58,6 @@ html {
   scroll-behavior: auto;
 }
 
-/* PART 4 - Smooth scrolling is nice, but only when the visitor did
-   not ask for less motion. */
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
@@ -156,15 +109,8 @@ img {
 }
 
 /* ============================================================
-   PART 4.4 - ANIMATION (the moving Night background)
+   - ANIMATION (the moving Night background)
    ------------------------------------------------------------
-   The layer is 150% as wide as the screen. @keyframes is a set of
-   steps for an animation; here it slides the image left and back
-   forever (alternate). A pseudo-element (::before) is a fake
-   extra box that CSS can draw. We use it instead of
-   background-attachment: fixed because it also works on phones.
-   z-index: -1 puts it behind the page content. A bigger z-index
-   sits closer to the viewer.
    ============================================================ */
 .app-shell::before {
   content: '';
@@ -193,8 +139,7 @@ main {
   padding: 0 var(--space-2);
 }
 
-/* PART 4 - This hides text on screen but keeps it for screen
-   readers. We use it for labels that would look repetitive. */
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -204,9 +149,6 @@ main {
   white-space: nowrap;
 }
 
-/* PART 4 - The outline shows keyboard users which control is
-   selected. It appears only when the visitor uses Tab, not when
-   they click with a mouse. */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -217,12 +159,8 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   PART 4.5 - THE SCROLL PROGRESS BAR
+  THE SCROLL PROGRESS BAR
    ------------------------------------------------------------
-   This rule gives the bar its shape and a grey background.
-   The small <style> block in index.html uses an ID selector,
-   which is stronger, so its blue-to-yellow colour wins.
-   JavaScript only changes the width.
    ============================================================ */
 .scroll-progress {
   position: fixed;
@@ -233,12 +171,7 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   PART 4.6 - FLEXBOX (the top bar)
-   ------------------------------------------------------------
-   display: flex puts children in one row. That is called Flexbox.
-   justify-content: space-between pushes the logo left and the
-   theme button right. align-items: center lines them up.
-   flex-wrap: wrap lets them move to a new line on a small screen.
+    FLEXBOX (the top bar)
    ============================================================ */
 .navbar {
   display: flex;
@@ -285,12 +218,9 @@ textarea:focus-visible {
 
 .nav-links a:hover { border-bottom-color: var(--accent); }
 
-/* PART 4.2b - THEME BUTTON (icon only)
+/*  THEME BUTTON (icon only)
    ------------------------------------------------------------
-   One round button in the navbar. It holds a picture, not text,
-   so screen readers still get the label from aria-label. A screen
-   reader is software that reads the page out loud.
-   The icon shows the mode you will switch TO. */
+ */
 .theme-btn {
   display: grid;
   place-items: center;
@@ -310,13 +240,9 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   PART 4.7 - SHARED BUTTONS (one class, many buttons)
+   SHARED BUTTONS (one class, many buttons)
    ------------------------------------------------------------
-   .btn is the base style. .btn-primary and .btn-ghost only change
-   the colours. Reusing a class keeps every button consistent.
-   border-radius: 999px makes a pill shape.
-   transition + :hover make the small lift animation.
-   ============================================================ */
+ */
 .btn {
   display: inline-block;
   font: inherit;
@@ -335,7 +261,7 @@ textarea:focus-visible {
   box-shadow: var(--shadow);
 }
 
-/* PART 4.7 - A disabled button looks faded and cannot be clicked.
+/*4.7 - A disabled button looks faded and cannot be clicked.
    The report pop-up uses this until a reason is picked. */
 .btn:disabled {
   opacity: 0.5;
@@ -928,18 +854,8 @@ hr {
 .card-tile-reported p { margin: 0; }
 
 /* ============================================================
-   VIDEO PART 4.9 - THE FULL-SCREEN VIEWER
-   ------------------------------------------------------------
-   The viewer covers the screen. It has two parts:
-   LEFT  = the artwork, fitted inside its side with a scroll bar.
-   RIGHT = a dark panel with the title, artist, links and buttons.
-   The X button sits on the left, over the artwork.
-   "Fitted" comes from object-fit: contain, which shows the whole
-   picture and never crops it. The scroll bar moves sideways
-   through the works. scroll-snap makes each work stop neatly at
-   the edge instead of halfway.
-   On a phone the dark panel moves to the bottom.
-   ============================================================ */
+  - THE FULL-SCREEN VIEWER
+    */
 .viewer {
   position: fixed;
   inset: 0;
@@ -1011,7 +927,7 @@ hr {
   gap: 0.6rem;
   padding: 1.5rem;
   background: #0a1128;
-  border-left: 1px solid rgba(20, 3, 3, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
   color: #fff;
 }
 
@@ -1144,36 +1060,11 @@ hr {
 
 .dialog-wide .field { margin-bottom: var(--space-2); }
 
-/* ============================================================
-   VIDEO PART 7 - TESTING AND PROBLEM-SOLVING
-   ------------------------------------------------------------
-   TESTING means using the site like a real visitor and looking
-   for problems. A "device toolbar" is a button in DevTools that
-   pretends the screen is a phone.
 
-   STEP 1 - SEE THE PROBLEM
-   Open the site, press F12, turn on the device toolbar, and pick
-   375px (a phone). The phone layout is ugly: the menu is a tall
-   stack, the About section and the form are two narrow columns,
-   and the page scrolls sideways.
-
-   STEP 2 TO 7 - FIX ONE PROBLEM AT A TIME
-   Each rule below says what is wrong and what to change. Change
-   the value, save, and look at the phone again.
-   ============================================================ */
 @media (max-width: 600px) {
-  /* STEP 2 - THE PAGE SCROLLS SIDEWAYS.
-     Something is wider than the screen. overflow-x controls what
-     happens when content is too wide. clip hides the extra width,
-     so the page cannot move left and right.
-     Change visible to clip. */
+
   .app-shell { overflow-x: visible; }
 
-  /* STEP 3 - THE MENU IS A TALL STACK.
-     flex-direction: row puts the logo, links and theme button in
-     one line. A small gap and small padding keep the bar short.
-     Change column to row, 1.2rem to 0.5rem, and 2.5rem 1rem to
-     0.5rem 1rem. */
   .navbar {
     flex-direction: column;
     gap: 1.2rem;
@@ -1196,17 +1087,11 @@ hr {
     gap: 0.75rem;
   }
 
-  /* STEP 7 - THE ABOUT SECTION AND THE FORM ARE STILL TWO COLUMNS.
-     grid-template-columns: 1fr 1fr makes two equal columns.
-     One column (1fr) is easier to read on a phone.
-     Change 1fr 1fr to 1fr. */
+
   .about-grid,
   .form-grid { grid-template-columns: 1fr; }
 }
 
-/* PART 4 - If the visitor asked their device to use less motion,
-   stop animations and smooth changes. This is a comfort setting
-   some people turn on in their system settings. */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;

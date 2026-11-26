@@ -3,7 +3,6 @@ export const ARTIST_NAME = 'Keiffer';
 export const CATEGORIES = ['Digital Art', 'Traditional', 'Animation'];
 export const MAX_WORKS = 5;
 
-// PART 3 - This helper adds the folder path to each image name.
 const art = (file) => `${import.meta.env.BASE_URL}art/${file}`;
 
 export const startingCards = [
