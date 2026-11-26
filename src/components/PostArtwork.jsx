@@ -6,7 +6,7 @@ import { MAX_LINKS, validateCardFields } from '../utils/validation';
 // ============================================================
 // VIDEO PART 5 - JAVASCRIPT: loops, conditions, validation.
 // VIDEO PART 6 - REACT: useState keeps the form values.
-// VIDEO PART 7 - TESTING: try an empty title, a bad link, a big file.
+// VIDEO PART 7 - TESTING: try an empty artist name, a bad link, a big file.
 // ============================================================
 //
 // PostArtwork = lets an artist post their ONE card with 1 to 5 works.
@@ -157,9 +157,7 @@ function PostArtwork({ categories, onAddCard }) {
               type="text"
               value={values.title}
               onChange={handleChange}
-              aria-invalid={Boolean(errors.title)}
             />
-            {errors.title && <p className="error">{errors.title}</p>}
           </div>
 
           <div className="field">

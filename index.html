@@ -1,42 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!--
-      ============================================================
-      VIDEO PART 3 - DEVELOPMENT SETUP AND STRUCTURE
-      TOPIC 1 OF 4: index.html (the shell of the website)
-      ------------------------------------------------------------
-      Hi. This is index.html. It is the only real HTML file in the
-      project. When the browser opens the website, it reads this
-      file first.
 
-      The page has two main parts:
-      1. <head> = information ABOUT the page. You do not see it on
-         the page itself. It holds the words on the browser tab
-         (<title>), the small icon (favicon), and notes for search
-         engines.
-      2. <body> = what people actually see.
-
-      "Meta" means extra information about something. A <meta> tag
-      is a note for the browser or a search engine, not text a
-      visitor reads on the page. For example, the viewport tag
-      tells a phone: "use the real screen width, do not zoom out."
-
-      Inside <body> there is an empty box: <div id="root"></div>.
-      It is empty on purpose. React will fill it with the whole
-      gallery.
-
-      At the bottom, the <script> tag starts React. In this source
-      code it points to /src/main.jsx. When the site is built for
-      the internet, that line becomes one bundled file instead.
-      That is how the browser knows to run our React code.
-
-      So the story is: index.html gives the browser a title, an
-      icon, and an empty box called root. React takes over from
-      there. The next topic is src/main.jsx, which is the file that
-      finds that box and starts React inside it.
-      ============================================================
-    -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
@@ -49,69 +14,18 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>CDArt Gallery | Card Gallery for Artists</title>
 
-    <!--
-      ============================================================
-      VIDEO PART 4 - STYLING AND LAYOUT
-      EXAMPLE 1 OF 3: internal CSS (a <style> block in the head)
-      ------------------------------------------------------------
-      CSS is the paint of the page. It decides colours, spacing,
-      and where things sit. "Internal CSS" just means the CSS lives
-      inside this HTML file instead of a separate .css file.
-
-      This tiny block colours the thin bar at the very top of the
-      page. It sits here because that bar is not made by React.
-
-      A "selector" is the part that says WHAT to style. Here the
-      selector is #scroll-progress. The # means "the element with
-      this id". An id is a name used once on the page. An id
-      selector is stronger than a class selector (a name written
-      with a dot, like .scroll-progress), so this colour wins over
-      the grey one in App.css.
-
-      The width is not set here. JavaScript sets it while you
-      scroll, because the bar grows as you move down the page.
-      ============================================================
-    -->
     <style>
       #scroll-progress {
-        background: linear-gradient(90deg, #3b5fa8, #ffd166);
+        background: linear-gradient(90deg, #000000, #ffd166);
         z-index: 100;
       }
     </style>
   </head>
   <body>
-    <!--
-      ============================================================
-      VIDEO PART 4 - STYLING AND LAYOUT
-      EXAMPLE 2 OF 3: inline CSS (the style="" attribute)
-      ------------------------------------------------------------
-      "Inline CSS" means the style is written right on the element,
-      inside the style="..." attribute. It is the strongest of the
-      three ways to add CSS, but it is hard to reuse.
 
-      We only use it here for the starting width (0%), because
-      JavaScript changes that width while you scroll.
-      aria-hidden="true" tells screen readers to skip this bar.
-      A screen reader is software that reads the page out loud for
-      people who cannot see it.
-      ============================================================
-    -->
     <div id="scroll-progress" class="scroll-progress" style="width: 0%" aria-hidden="true"></div>
 
-    <!--
-      ============================================================
-      VIDEO PART 8 - FINAL WEBSITE WALKTHROUGH
-      ------------------------------------------------------------
-      This is the empty box from Part 3. When you open the site,
-      React puts everything inside it: the top bar, the welcome
-      area, the gallery, the post form, the About section, the
-      footer, and the pop-ups.
-
-      Show this in the browser, then press F12. That opens DevTools,
-      the browser's built-in inspector. Point at #root and say:
-      "Everything I built is inside this one box."
-      ============================================================
-    -->
+    
     <div id="root"></div>
 
     <noscript>
@@ -135,40 +49,6 @@
     <script type="module" src="/src/main.jsx"></script>
     <script src="/dom-demo.js"></script>
 
-    <!--
-      ============================================================
-      VIDEO PART 9 - REFLECTION AND CLOSING
-      ------------------------------------------------------------
-      Go back to your face camera here. Do not read this word for
-      word. Use these prompts and say it in your own voice.
 
-      1. WHAT I LEARNED
-         "I learned how React breaks a page into small components,
-         how state makes the page update, and how CSS Grid and
-         Flexbox make the layout fit different screens."
-
-      2. THE HARDEST PART
-         Pick one real example. For example:
-         "The hardest part was the art viewer. I had to make the
-         artwork scroll sideways, keep the mouse wheel and keyboard
-         in sync, and still let Escape close the zoom first."
-
-      3. WHAT I AM PROUD OF
-         Pick one real example. For example:
-         "I am proud that the gallery works on a phone, that every
-         artist gets the same one card, and that the form checks
-         mistakes before posting."
-
-      4. WHAT I WOULD IMPROVE NEXT
-         "Next time I would add a real database and accounts, so
-         cards and hearts survive a refresh."
-
-      5. CLOSE
-         "Thank you for watching. This is CDArt Gallery."
-
-      REMEMBER: the rubric says do not read a script. These are
-      notes, not lines. Sound natural and point at the code.
-      ============================================================
-    -->
   </body>
 </html>

@@ -86,9 +86,7 @@ function EditCardPopup({ card, categories, onSave, onDelete, onCancel }) {
             type="text"
             value={values.title}
             onChange={handleChange}
-            aria-invalid={Boolean(errors.title)}
           />
-          {errors.title && <p className="error">{errors.title}</p>}
         </div>
 
         <div className="field">

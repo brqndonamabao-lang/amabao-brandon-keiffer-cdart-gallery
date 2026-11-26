@@ -4,15 +4,15 @@ export const MAX_LINKS = 5;
 
 // ============================================================
 // VIDEO PART 5 - VALIDATION = checking user input before using it.
-// VIDEO PART 7 - TESTING: try an empty title, a short title,
-// a bad link, a 6 MB picture, and 6 links.
+// VIDEO PART 7 - TESTING: try an empty artist name, an empty
+// category, a bad link, a 6 MB picture, and 6 links.
 // ============================================================
 //
 // Used by PostArtwork AND EditCardPopup, so the rules live in one
 // place instead of being copied into two forms.
 //
 // It returns an object of error messages. An "object" is a box of
-// named values, like { title: "a message" }. An empty object {}
+// named values, like { author: "a message" }. An empty object {}
 // means everything is valid. The first social link is required.
 
 export function validateCardFields(values, links) {
@@ -20,9 +20,6 @@ export function validateCardFields(values, links) {
 
   // PART 5 - IF: each rule asks a question. If the answer is
   // "yes, something is wrong", add one message to the errors box.
-  if (values.title.trim().length < 3) {
-    errors.title = 'Give your card a title (at least 3 characters).';
-  }
   if (values.author.trim() === '') {
     errors.author = 'Please enter the artist name.';
   }
