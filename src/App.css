@@ -44,7 +44,7 @@
   --surface: #faf6ee;
   --text: #263049;
   --muted: #636b7d;
-  --accent: #2d4f8f;
+  --accent: #090526;
   --accent-text: #ffffff;
   --tag: #6d28d9;
   --brand-color: #ff019e;
@@ -1010,8 +1010,8 @@ hr {
   align-items: flex-start;
   gap: 0.6rem;
   padding: 1.5rem;
-  background: #111a30;
-  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0a1128;
+  border-left: 1px solid rgba(20, 3, 3, 0.12);
   color: #fff;
 }
 
