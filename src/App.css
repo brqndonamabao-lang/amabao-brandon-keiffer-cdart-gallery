@@ -47,7 +47,7 @@
   --accent: #2d4f8f;
   --accent-text: #ffffff;
   --tag: #6d28d9;
-  --brand-color: #b8860b;
+  --brand-color: #ff019e;
   --danger: #b3261e;
   --border: #ded4c6;
   --shadow: 0 6px 20px rgba(28, 38, 70, 0.14);
@@ -115,26 +115,6 @@ body {
   margin: 0;
   font-family: var(--font-body);
   line-height: 1.6;
-}
-
-/* PART 4 - A skip link stays hidden until you press Tab, the key
-   that moves from link to link. It lets a keyboard user jump
-   straight to the gallery without tabbing through the menu. */
-.skip-link {
-  position: absolute;
-  top: -60px;
-  left: var(--space-2);
-  z-index: 500;
-  padding: 0.6rem 1rem;
-  color: var(--accent-text);
-  background: var(--accent);
-  border-radius: 0 0 10px 10px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.skip-link:focus {
-  top: 0;
 }
 
 h1,

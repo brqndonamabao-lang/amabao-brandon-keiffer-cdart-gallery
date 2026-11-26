@@ -10,57 +10,6 @@ import About from './components/About';
 import Footer from './components/Footer';
 import { GALLERY_NAME, CATEGORIES, startingCards } from './data/artworks';
 
-/* ============================================================
-   VIDEO PART 3 - DEVELOPMENT SETUP AND STRUCTURE
-   TOPIC 3 OF 4: src/App.jsx (the brain of the page)
-   ------------------------------------------------------------
-   This is the main React file. It does three jobs:
-   1. It imports the small pieces (Navbar, Hero, Gallery, etc.).
-   2. It keeps the shared data (cards, theme, search).
-   3. It puts the pieces in order on the screen.
-
-   "Import" means bringing code from another file so we can use
-   it here. The imports at the top are like bringing tools into
-   a room.
-
-   `useState`, `useEffect`, and `useRef` come from React. The
-   other imports are our own components and data.
-
-   What is a component? It is a small reusable piece of the page,
-   like a button, one card, or a whole section. We build a big
-   page by putting small pieces together.
-
-   At the bottom of this file you will see `return (`. What is
-   that? A React component is just a JavaScript function. A normal
-   function can return a result, like a calculator returns a
-   number. In React, that result is JSX. JSX looks like HTML, but
-   it is really JavaScript, so we can put values and logic inside
-   it. React turns the returned JSX into real page elements.
-
-   So `return (` means: "here is what this component should
-   show." A component must return something to display. If it
-   returns nothing, nothing appears on the screen. `return` is
-   normal JavaScript, not an HTML tag and not a special React
-   keyword.
-
-   The order inside the return is the order on the page:
-   Navbar -> Hero -> Gallery -> Post artwork -> About -> Footer.
-   The pop-ups at the bottom appear only when someone opens them.
-
-   The next topic is src/data/artworks.js, which holds the
-   starting card data that App.jsx uses.
-   ============================================================ */
-
-/* ============================================================
-   PART 6 - REACT DATA SHAPE
-   ------------------------------------------------------------
-   `prepareCard` takes one card and adds the fields the app needs.
-   `...card` is the spread operator. It means "copy everything
-   that is already in this card". Then we add the missing fields
-   with safe starting values.
-   `isMine` is false for the featured artist. It becomes true only
-   for the card posted by the visitor using this page.
-   ============================================================ */
 function prepareCard(card) {
   return {
     ...card,
@@ -72,27 +21,7 @@ function prepareCard(card) {
 }
 
 function App() {
-  /* ==========================================================
-     VIDEO PART 6 - REACT IMPLEMENTATION
-     STATE: data that can change
-     ----------------------------------------------------------
-     "State" is information the page remembers while it is open.
-     `useState` gives us two things in one line:
-     - the current value (cards, theme, searchText, ...)
-     - a setter function (setCards, setTheme, ...)
-     When we call the setter, React re-draws the page with the new
-     value. We never change the screen by hand.
 
-     Example:
-       const [theme, setTheme] = useState('dark');
-     `theme` is the value now. `setTheme('light')` changes it, and
-     React updates every place that uses `theme`.
-
-     `useRef` is different. It is a small box that remembers a
-     value between re-draws, but changing it does NOT re-draw the
-     page. We use it to point at the gallery section so we can
-     scroll back to it later.
-     ========================================================== */
   const [cards, setCards] = useState(() => startingCards.map(prepareCard));
   const [theme, setTheme] = useState('dark');
   const [activeCategory, setActiveCategory] = useState('All');
@@ -105,23 +34,9 @@ function App() {
   const [reportingCardId, setReportingCardId] = useState(null);
   const galleryRef = useRef(null);
 
-  /* ==========================================================
-     VIDEO PART 5 - JAVASCRIPT INTERACTIONS
-     EFFECTS: code that runs after the screen updates
-     ----------------------------------------------------------
-     `useEffect` is for things outside React: the address bar, the
-     browser tab colour, timers, and event listeners. An "event
-     listener" is code that waits for something to happen, like a
-     key press or a click.
 
-     The array at the end (for example `[openCardId]`) tells React
-     when to run the effect again. An empty array `[]` means "run
-     once, when the component first appears."
-     ========================================================== */
   useEffect(() => {
-    // PART 5 - Put the open card in the address bar, so the link
-    // can be copied and shared. `replaceState` changes the address
-    // without reloading the page.
+
     if (openCardId) {
       history.replaceState(null, '', `#card-${openCardId}`);
     } else if (/^#card-\d+$/.test(window.location.hash)) {
@@ -130,21 +45,12 @@ function App() {
   }, [openCardId]);
 
   useEffect(() => {
-    // PART 5 - Change the colour the phone uses for its browser bar,
-    // so it matches the dark or light theme.
+
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1224' : '#f2ece2');
   }, [theme]);
 
-  /* ==========================================================
-     VIDEO PART 5 - EVENT HANDLERS
-     ----------------------------------------------------------
-     These functions run when the visitor clicks something.
-     `toggleTheme` flips light and dark. `toggleHeart` uses `.map()`
-     to go over every card and change only the one that was
-     clicked. `addCard` uses the spread operator `...` to put the
-     new card at the front of the list.
-     ========================================================== */
+
   const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
 
   const toggleHeart = (id) => {
@@ -161,8 +67,7 @@ function App() {
   };
 
   const addCard = (newCard) => {
-    // PART 5 - `reduce` looks at every card and keeps the biggest
-    // id. Add 1 so the new card gets a fresh id.
+
     const nextId = cards.reduce((max, card) => Math.max(max, card.id), 0) + 1;
     setCards([
       { ...newCard, id: nextId, likes: 0, liked: false, reports: [], reportedByMe: false, isMine: true },
@@ -170,8 +75,7 @@ function App() {
     ]);
     setActiveCategory('All');
     setSearchText('');
-    // PART 5 - After posting, scroll back to the gallery.
-    // setTimeout waits a moment so React can draw the new card first.
+
     setTimeout(() => galleryRef.current.scrollIntoView({ behavior: 'smooth' }), 100);
   };
 
@@ -203,22 +107,14 @@ function App() {
   };
 
   const openRandomCard = () => {
-    // PART 5 - Keep only cards that were not reported, then pick
-    // one random card from that list.
+  
     const pool = cards.filter((card) => !card.reportedByMe);
     if (pool.length === 0) return;
     const randomIndex = Math.floor(Math.random() * pool.length);
     setOpenCardId(pool[randomIndex].id);
   };
 
-  /* ==========================================================
-     VIDEO PART 5 - DERIVED DATA
-     ----------------------------------------------------------
-     These values are calculated from state every time the page
-     re-draws. `.filter()` keeps only the cards that match the
-     category and the search text. `.sort()` puts the visitor's
-     own card first. `.find()` picks one card by its id.
-     ========================================================== */
+ 
   const query = searchText.trim().toLowerCase();
   const filteredCards = cards.filter((card) => {
     const matchesCategory = activeCategory === 'All' || card.category === activeCategory;
@@ -240,19 +136,8 @@ function App() {
   const editingCard = cards.find((card) => card.id === editingCardId);
   const reportingCard = cards.find((card) => card.id === reportingCardId);
 
-  /* ==========================================================
-     VIDEO PART 8 - FINAL WEBSITE WALKTHROUGH
-     ----------------------------------------------------------
-     This is the `return` explained in Part 3. Everything inside it
-     is what the visitor sees. Read it from top to bottom:
-     Navbar -> Hero -> Gallery -> Post artwork -> About ->
-     Footer. Then show the pop-ups at the bottom: ArtworkDetails,
-     the edit pop-up, and the report pop-up.
-     ========================================================== */
   return (
     <div className="app-shell" data-theme={theme}>
-      <a className="skip-link" href="#gallery">Skip to the gallery</a>
-
       <Navbar galleryName={GALLERY_NAME} theme={theme} onToggleTheme={toggleTheme} />
 
       <main>
