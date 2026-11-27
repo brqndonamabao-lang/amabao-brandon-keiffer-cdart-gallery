@@ -1,7 +1,7 @@
 function About() {
   return (
-    <section className="section about" id="about" aria-abelledby="about-title">
-      <p className="eyebrow">About this place</p>l
+    <section className="section about" id="about" aria-labelledby="about-title">
+      <p className="eyebrow">About this place</p>
       <h2 id="about-title">A gallery built to grow fans</h2>
 
       <div className="about-grid">

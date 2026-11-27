@@ -1,12 +1,10 @@
-
-
 const CURRENT_YEAR = new Date().getFullYear();
 
 function Footer({ galleryName }) {
   return (
     <footer className="site-footer">
       <p>
-        &copy; {CURRENT_YEAR} {galleryName}. Every artwork belongs to its artist. Please
+        &copy;2026 {galleryName}. Every artwork belongs to its artist. Please
         don&rsquo;t copy or repost without permission.
         <br />
         Background: a painted reproduction of <i>The Starry Night</i> by Vincent van Gogh (1889, public domain).
