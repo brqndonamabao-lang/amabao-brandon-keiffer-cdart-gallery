@@ -7,21 +7,6 @@ const REPORT_REASONS = [
   'Something else',
 ];
 
-// ============================================================
-// VIDEO PART 5 - JAVASCRIPT: the list above holds the choices.
-// VIDEO PART 6 - REACT: useState remembers the chosen reason.
-// VIDEO PART 8 - WALKTHROUGH: click Report on a card.
-// ============================================================
-//
-// ReportArtwork = asks WHY a card is being reported.
-//
-// PROPS: title (the card name), onSubmit(reason), onCancel
-//
-// PART 5 - RADIO BUTTONS are a multiple-choice question. The
-// visitor can pick only one answer. "Disabled" means the button
-// is greyed out and cannot be clicked until a reason is chosen.
-// `preventDefault` stops the browser from reloading the page when
-// a form is sent.
 
 function ReportArtwork({ title, onSubmit, onCancel }) {
   const [reason, setReason] = useState('');

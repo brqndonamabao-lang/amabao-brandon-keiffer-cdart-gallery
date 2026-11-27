@@ -1,6 +1,5 @@
-// ============================================================
-// VIDEO PART 3 - STRUCTURE: one square card in the gallery.
-// VIDEO PART 6 - REACT: App draws this once per card with .map().
+
+// REACT: App draws this once per card with .map().
 // ============================================================
 //
 // ArtworkCard = the WHOLE card (picture + title + heart + report).
@@ -11,15 +10,7 @@
 //   onOpen   -> function to open the detail view
 //   onLike   -> function to add or remove a heart
 //   onReport -> function to open the report pop-up
-//
-// PART 3 - HTML ELEMENTS USED HERE:
-// <article> is one complete card. <h3> is the title. <button> is
-// used for anything clickable. The cover is a button because
-// clicking it opens the detail view.
-//
-// PART 3 - ACCESSIBILITY: `aria-label` is the name a screen
-// reader reads out loud. `aria-pressed` says whether the heart is
-// on or off, like a light switch.
+
 
 function ArtworkCard({ card, onOpen, onLike, onReport }) {
   const { id, title, author, works, likes, liked, isMine } = card;

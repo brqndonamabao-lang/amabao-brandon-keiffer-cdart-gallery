@@ -750,14 +750,6 @@ hr {
   margin: 0;
 }
 
-.gallery-note {
-  margin: var(--space-3) auto 0;
-  max-width: 560px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-
 .tile-cover {
   position: relative;
   display: block;

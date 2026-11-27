@@ -144,7 +144,6 @@ function App() {
         <Hero galleryName={GALLERY_NAME} onSurprise={openRandomCard} />
 
         <Gallery
-          cardCount={cards.length}
           visibleCards={visibleCards}
           categories={CATEGORIES}
           activeCategory={activeCategory}

@@ -3,37 +3,12 @@ import { MAX_WORKS } from '../data/artworks';
 import { cleanLinks } from '../utils/links';
 import { MAX_LINKS, validateCardFields } from '../utils/validation';
 
-// ============================================================
-// VIDEO PART 5 - JAVASCRIPT: loops, conditions, validation.
-// VIDEO PART 6 - REACT: useState keeps the form values.
-// VIDEO PART 7 - TESTING: try an empty artist name, a bad link, a big file.
-// ============================================================
-//
-// PostArtwork = lets an artist post their ONE card with 1 to 5 works.
-// Social links are required.
-//
-// PROPS: categories, onAddCard
-//
-// `categories` is the list of styles for the dropdown.
-// `onAddCard` is the function App uses to add the new card.
-//
-// "Validation" means checking the visitor's input before using it.
-// "State" is information the form remembers while the page is open:
-// `values` holds the text fields, `links` holds the social links,
-// `works` holds the chosen files, and `errors` holds the messages
-// shown under the fields.
-//
-// PART 5 - `validateCardFields` checks the text and links.
-// `checkFile` checks each picture or video. The helper
-// `SocialLinksFields` is shared with EditCardPopup.
 
 const MAX_IMAGE_MB = 5;
 const MAX_VIDEO_MB = 30;
 
 const emptyForm = { title: '', author: '', category: '' };
 
-// PART 5 - CHECKFILE: returns a message if the file is the wrong
-// type or too big, or an empty string if it is fine.
 function checkFile(file) {
   const isImage = file.type.startsWith('image/');
   const isVideo = file.type.startsWith('video/');
@@ -44,11 +19,11 @@ function checkFile(file) {
   if (isVideo && file.size > MAX_VIDEO_MB * 1024 * 1024) {
     return `"${file.name}" is too big (videos: up to ${MAX_VIDEO_MB} MB).`;
   }
-  return '';
+  return ''
 }
 
 function PostArtwork({ categories, onAddCard }) {
-  // PART 6 - STATE: every value the form needs to remember.
+  // state every value the form needs to remember.
   const [values, setValues] = useState(emptyForm);
   const [links, setLinks] = useState(['']);
   const [works, setWorks] = useState([]);
@@ -74,9 +49,7 @@ function PostArtwork({ categories, onAddCard }) {
     setLinks(links.filter((text, i) => i !== index));
   };
 
-  // PART 5 - works (pictures / videos)
-  // PART 5 - LOOP: go over every chosen file and keep the good ones.
-  // A loop repeats the same steps for each item in a list.
+
   const handleFiles = (event) => {
     const picked = [...event.target.files];
     const accepted = [];
@@ -91,8 +64,7 @@ function PostArtwork({ categories, onAddCard }) {
       } else {
         accepted.push({
           id: nextWorkId.current++,
-          // PART 5 - createObjectURL makes a temporary link to the
-          // file inside this browser. Nothing is uploaded anywhere.
+
           url: URL.createObjectURL(file),
           type: file.type.startsWith('video/') ? 'video' : 'image',
         });
@@ -122,8 +94,7 @@ function PostArtwork({ categories, onAddCard }) {
     });
   };
 
-  // PART 5 - CONDITION: stop if there is an error.
-  // A condition is just an if question: is this true or false?
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const foundErrors = validateCardFields(values, links);
@@ -222,9 +193,7 @@ function PostArtwork({ categories, onAddCard }) {
             </>
           )}
 
-          {/* PART 5 - `preload="metadata"` loads only the video's
-              basic details (its length and a first frame), not the
-              whole file. "Metadata" means data about the file. */}
+          {}
           {works.length > 0 && (
             <ul className="work-previews">
               {works.map((work, number) => (
@@ -261,11 +230,7 @@ function PostArtwork({ categories, onAddCard }) {
   );
 }
 
-/* PART 6 - SOCIAL LINKS FIELD HELPER
-   ------------------------------------------------------------
-   This is the "add up to 5 social media links" part of the form.
-   EditCardPopup imports it too, so the markup lives in one place
-   instead of being copied into two forms. */
+
 export function SocialLinksFields({ links, errors, idPrefix, onChange, onAdd, onRemove }) {
   return (
     <fieldset className="field links-field">

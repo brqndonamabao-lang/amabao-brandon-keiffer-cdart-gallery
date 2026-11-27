@@ -2,26 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { WorkMedia } from './ArtworkCard';
 import { getPlatformName } from '../utils/links';
 
-// ============================================================
-// VIDEO PART 5 - JAVASCRIPT: effects, keyboard, and a timer.
-// VIDEO PART 6 - REACT: useState remembers what is on screen.
-// VIDEO PART 8 - WALKTHROUGH: open a card and show this screen.
-// ============================================================
-//
-// ArtworkDetails = one card, full screen, like a TikTok post.
-// "Details" means the close-up view: the artwork plus the title,
-// artist, links, and buttons.
-//
-// PROPS are the values App gives this component: the card to show,
-// plus the functions for a heart, a report, an edit, and closing.
-//
-// PART 6 - THREE PIECES OF MEMORY (state):
-//   index  = which work is showing
-//   zoom   = is the zoom picture open?
-//   copied = show the "Copied!" text for a moment?
-//
-// PART 5 - useRef points at the sliding area so we can scroll it.
-// A "ref" is a handle to a real element on the page.
 
 function ArtworkDetails({ card, onLike, onReport, onEdit, onClose }) {
   const { id, title, author, socials, works, likes, liked, isMine } = card;
@@ -34,9 +14,6 @@ function ArtworkDetails({ card, onLike, onReport, onEdit, onClose }) {
   const current = works[index];
   const lastIndex = works.length - 1;
 
-  // PART 5 - Stop the page behind this full-screen view from
-  // scrolling. `overflow = 'hidden'` locks the page. The return
-  // runs when the view closes, so scrolling works again.
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -44,10 +21,7 @@ function ArtworkDetails({ card, onLike, onReport, onEdit, onClose }) {
     };
   }, []);
 
-  // PART 5 - Mouse wheel: up/down moves one work at a time.
-  // "Wheel" means the scroll wheel on a mouse.
-  // `preventDefault` stops the page itself from scrolling too.
-  // The short pause stops one fast flick from skipping works.
+
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return undefined;
@@ -72,11 +46,8 @@ function ArtworkDetails({ card, onLike, onReport, onEdit, onClose }) {
     return () => stage.removeEventListener('wheel', handleWheel);
   }, []);
 
-  // PART 5 - Keyboard: Escape closes, left and right change work.
-  // `addEventListener` waits for a key press. The return removes
-  // the listener so it does not keep running after the view closes.
   useEffect(() => {
-    // PART 5 - Move to a work. Math keeps the number inside the list.
+   
     function goTo(number) {
       const next = Math.max(0, Math.min(lastIndex, number));
       setIndex(next);
@@ -98,18 +69,12 @@ function ArtworkDetails({ card, onLike, onReport, onEdit, onClose }) {
     return () => window.removeEventListener('keydown', handleKey);
   }, [index, zoom, onClose, lastIndex]);
 
-  // PART 5 - When the visitor swipes or drags the art, update the
-  // memory to match. `scrollLeft` is how far the strip has moved.
   function handleScroll() {
     const stage = stageRef.current;
     if (!stage || stage.clientWidth === 0) return;
     setIndex(Math.round(stage.scrollLeft / stage.clientWidth));
   }
 
-  // PART 5 - Copy this card's link, then show "Copied!" for 2 seconds.
-  // The clipboard is the invisible place where "copy" puts text.
-  // `.catch` stops an error from breaking the page if copying is
-  // blocked by the browser.
   function copyLink() {
     const link = `${window.location.origin}${window.location.pathname}#card-${id}`;
     navigator.clipboard.writeText(link).catch(() => {});
@@ -117,11 +82,10 @@ function ArtworkDetails({ card, onLike, onReport, onEdit, onClose }) {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  // PART 3 - role="dialog" tells screen readers this is a pop-up.
-  // aria-modal="true" means the page behind it is not active.
+
   return (
     <div className="viewer" role="dialog" aria-modal="true" aria-label={`${title} by ${author}`}>
-      {/* PART 3 - The artwork. Each work is one full-screen slide. */}
+      {}
       <div className="viewer-stage" ref={stageRef} onScroll={handleScroll}>
         <div className="viewer-track">
           {works.map((work, number) => (
@@ -148,7 +112,7 @@ function ArtworkDetails({ card, onLike, onReport, onEdit, onClose }) {
         </div>
       </div>
 
-      {/* PART 3 - One column of quiet controls over the art. */}
+      {}
       <div className="viewer-info">
         <h3>{title}</h3>
         <p className="tile-author">by {author}</p>
@@ -184,7 +148,7 @@ function ArtworkDetails({ card, onLike, onReport, onEdit, onClose }) {
         &times;
       </button>
 
-      {/* PART 6 - The zoom layer only draws when zoom is true. */}
+      {/* 6 - The zoom layer only draws when zoom is true. */}
       {zoom && current.type === 'image' && (
         <div className="zoom-layer" onClick={() => setZoom(false)}>
           <img src={current.url} alt={`${title} by ${author}`} />
@@ -194,10 +158,7 @@ function ArtworkDetails({ card, onLike, onReport, onEdit, onClose }) {
   );
 }
 
-/* VIDEO PART 6 - FOLLOWLINKS HELPER
-   ------------------------------------------------------------
-   One "Follow" button per social link. getPlatformName turns a
-   long address into a short name like "YouTube" or "TikTok". */
+
 function FollowLinks({ urls, artist }) {
   if (!urls || urls.length === 0) return null;
 

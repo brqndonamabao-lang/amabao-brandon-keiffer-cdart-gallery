@@ -14,7 +14,6 @@ import ArtworkCard from './ArtworkCard';
 // one with a different colour.
 //
 // PROPS (the values App passes in):
-//   cardCount        -> how many cards exist in total
 //   visibleCards     -> the cards that match right now
 //   categories       -> ["Digital Art", "Traditional", "Animation"]
 //   activeCategory   -> the chip currently selected
@@ -37,7 +36,6 @@ import ArtworkCard from './ArtworkCard';
 // count when it changes, without interrupting.
 
 function Gallery({
-  cardCount,
   visibleCards,
   categories,
   activeCategory,
@@ -108,13 +106,6 @@ function Gallery({
       ) : (
         <p className="empty-state">
           No cards match that search. Try another word or pick &ldquo;All&rdquo;.
-        </p>
-      )}
-
-      {cardCount === 1 && visibleCards.length === 1 && (
-        <p className="gallery-note">
-          The wall is just opening. Post your card below and it will be pinned
-          here beside the featured artist.
         </p>
       )}
     </section>
